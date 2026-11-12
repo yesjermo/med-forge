@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/Icon";
 import { checkNumber } from "../labmath";
-import type { ProgressStore } from "../progress";
+import { lastReviewedAt, type ProgressStore, type Sm2 } from "../progress";
 import type { Course, Question } from "../types";
 import { Crumbs, MedText, courseHref } from "../ui";
 import { createMyCards, type MyCard } from "../mycards";
@@ -44,12 +44,17 @@ export function Review({ progress, refresh, courses }: { progress: ProgressStore
   const daysLeft = Number.isFinite(examAt) ? Math.round((new Date(`${examDate}T00:00:00`).getTime() - today.getTime()) / DAY) : null;
   const [cards] = useState(() => createMyCards(safeStorage()));
   const lookAhead = daysLeft !== null && daysLeft >= 0;
-  const items = (at?: number): Item[] => [
-    ...progress.due(ids, at).map((id): Item => ({ kind: "q", ...all.find((x) => x.q.id === id)! })),
-    ...cards.due(at).map((card): Item => ({ kind: "card", card })),
+  const now = Date.now();
+  const sm2Of = (x: Item): Sm2 => (x.kind === "q" ? progress.question(x.q.id)!.sm2 : x.card.sm2);
+  // One pass over each store, up to exam day (or now); "due now" is the subset already due.
+  const horizon = lookAhead ? Math.max(now, examAt) : now;
+  const upcoming: Item[] = [
+    ...progress.due(ids, horizon).map((id): Item => ({ kind: "q", ...all.find((x) => x.q.id === id)! })),
+    ...cards.due(horizon).map((card): Item => ({ kind: "card", card })),
   ];
-  const dueNow = items();
-  const beforeExam = lookAhead ? items(examAt) : dueNow;
+  const dueNow = upcoming.filter((x) => sm2Of(x).due <= now);
+  // Reviewing ahead skips anything already graded today: it would only reset a schedule just set.
+  const beforeExam = upcoming.filter((x) => sm2Of(x).due <= now || lastReviewedAt(sm2Of(x)) < today.getTime());
   const fresh = all.filter((x) => !progress.question(x.q.id)).slice(0, 5);
   const [ahead, setAhead] = useState(false);
   const [index, setIndex] = useState(0);

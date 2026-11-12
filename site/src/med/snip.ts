@@ -77,7 +77,7 @@ function startWorker(source: string): Promise<Worker | null> {
 let pdfjsPromise: Promise<PdfJs> | null = null;
 
 function loadPdfJs(): Promise<PdfJs> {
-  if (!PDF_SUPPORTED) return Promise.reject(new Error("PDFs open in the online version of StudyForge. Here, take a screenshot of the page and paste or drop it in."));
+  if (!PDF_SUPPORTED) return Promise.reject(new Error("PDFs open in the online version of MedForge. Here, take a screenshot of the page and paste or drop it in."));
   pdfjsPromise ??= (async () => {
     const [pdfjs, { default: source }] = await Promise.all([
       import("pdfjs-dist/legacy/build/pdf.mjs") as Promise<PdfJs>,
@@ -113,14 +113,16 @@ export async function openPdf(data: ArrayBuffer): Promise<PDFDocumentProxy> {
     disableAutoFetch: true,
     disableStream: true,
   });
+  let needsPassword = false;
   task.onPassword = () => {
+    needsPassword = true;
     void task.destroy();
   };
   try {
     return await task.promise;
   } catch (e) {
     const name = (e as { name?: string }).name;
-    if (name === "PasswordException") throw new Error("This PDF is password-protected. Open it elsewhere and take a screenshot instead.");
+    if (needsPassword || name === "PasswordException") throw new Error("This PDF is password-protected. Open it elsewhere and take a screenshot instead.");
     if (name === "InvalidPDFException") throw new Error("That file doesn't look like a valid PDF.");
     throw e;
   }

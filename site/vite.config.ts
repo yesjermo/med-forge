@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
   const single = mode === "single" || Boolean(process.env.SINGLE_FILE);
   return {
     root: fileURLToPath(new URL(".", import.meta.url)),
-    base: single ? "./" : (process.env.BASE_PATH ?? "/study-forge/"),
+    base: single ? "./" : (process.env.BASE_PATH ?? "/med-forge/"),
     plugins: [
       react(),
       // site/index.html carries a "source file, not the app" note for people browsing the repo;

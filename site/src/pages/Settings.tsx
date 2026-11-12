@@ -79,7 +79,7 @@ export function SettingsPage({ settings, onSave }: { settings: Settings; onSave:
                 <ul>
                   <li>the web edition on GitHub Pages, or</li>
                   <li>
-                    <code>npm run preview</code>, then <code>http://localhost:4173/study-forge/</code> (Ollama already allows
+                    <code>npm run preview</code>, then <code>http://localhost:4173/med-forge/</code> (Ollama already allows
                     localhost)
                   </li>
                 </ul>

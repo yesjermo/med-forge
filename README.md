@@ -1,14 +1,14 @@
 <div align="center">
 
-# 🩺 StudyForge
+# 🩺 MedForge
 
 **Course notes, practice questions, lab and clinical practice, and cited study blocks for medical, nursing, pre-med and pre-vet students.**
 
-[![CI](https://github.com/yesjermo/study-forge/actions/workflows/ci.yml/badge.svg)](https://github.com/yesjermo/study-forge/actions/workflows/ci.yml)
-[![Live site](https://img.shields.io/badge/live%20site-yesjermo.github.io-2ea44f?logo=github)](https://yesjermo.github.io/study-forge/)
-[![Offline copy](https://img.shields.io/badge/offline%20copy-one%20HTML%20file-0a7ea4?logo=html5&logoColor=white)](https://yesjermo.github.io/study-forge/study-forge.html)
+[![CI](https://github.com/yesjermo/med-forge/actions/workflows/ci.yml/badge.svg)](https://github.com/yesjermo/med-forge/actions/workflows/ci.yml)
+[![Live site](https://img.shields.io/badge/live%20site-yesjermo.github.io-2ea44f?logo=github)](https://yesjermo.github.io/med-forge/)
+[![Offline copy](https://img.shields.io/badge/offline%20copy-one%20HTML%20file-0a7ea4?logo=html5&logoColor=white)](https://yesjermo.github.io/med-forge/med-forge.html)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Last commit](https://img.shields.io/github/last-commit/yesjermo/study-forge)](https://github.com/yesjermo/study-forge/commits/main)
+[![Last commit](https://img.shields.io/github/last-commit/yesjermo/med-forge)](https://github.com/yesjermo/med-forge/commits/main)
 
 [![Node](https://img.shields.io/badge/node-%E2%89%A522.13-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
@@ -18,9 +18,9 @@
 [![AI: Ollama by default](https://img.shields.io/badge/AI-Ollama%20(free%2C%20local)-000000?logo=ollama&logoColor=white)](https://ollama.com)
 [![Privacy](https://img.shields.io/badge/your%20data-stays%20in%20your%20browser-8250df)](#-run-it)
 
-**[Open StudyForge →](https://yesjermo.github.io/study-forge/)**
+**[Open MedForge →](https://yesjermo.github.io/med-forge/)**
 
-<img src=".github/media/tour.gif" alt="A tour of StudyForge: the course list, a course dashboard, a concept with a rotating 3D alpha-helix, a graded practice question, an ECG sketched on the question's scratchpad, the daily review with an exam-day countdown, and the study tools" width="800">
+<img src=".github/media/tour.gif" alt="A tour of MedForge: the course list, a course dashboard, a concept with a rotating 3D alpha-helix, a graded practice question, an ECG sketched on the question's scratchpad, the daily review with an exam-day countdown, and the study tools" width="800">
 
 </div>
 
@@ -69,8 +69,8 @@ flowchart TB
 flowchart LR
     P["git push to main"] --> CI["GitHub Actions: CI"]
     CI --> TC["typecheck"] --> TS["tests"] --> B1["npm run single<br/>one-file offline copy"] --> B2["npm run build<br/>the website"]
-    B2 --> GP["🌐 GitHub Pages<br/>yesjermo.github.io/study-forge"]
-    B1 --> OC["⬇️ study-forge.html<br/>footer: Offline copy"]
+    B2 --> GP["🌐 GitHub Pages<br/>yesjermo.github.io/med-forge"]
+    B1 --> OC["⬇️ med-forge.html<br/>footer: Offline copy"]
     GP --- OC
 ```
 
@@ -87,7 +87,7 @@ Three sample courses: **Human Anatomy & Physiology**, **Microbiology** and **Bio
 - **Question bank:** multiple-choice and numeric questions with hints and explanations, and a **Scratchpad** tab on every question (pen, highlighter, eraser, colours, undo; saved with the question) for sketches and side calculations. There's also a **timed exam** and a printable **revision sheet**.
 - **Daily review** (`#/daily-review`): built-in SuperMemo-2 (SM-2) spaced repetition. Rate recall from 0 (Blankout) to 5 (Mastered 🎉) and each card comes back just before you'd forget it. Set your exam day to see a countdown and review ahead everything due before it.
 - **Question snipper** (`#/import`): open a past exam or tutorial sheet, drag a box over a problem (and its answer, if you like), and it becomes a card in your daily review. PDFs open in the hosted site; the double-click `web/index.html` takes images and screenshots, which keeps it small. Files never leave your browser.
-- **Lecture recordings:** add a recording to any lecture and play it with chapters and timed insights that follow along (the player streams with HTTP range requests, so a long recording isn't downloaded in full). **Tools > Lecture recording to insights** turns a lecture's captions into timed exam tips, clinical links and intuitions with your AI writer. Echo360 needs your university login, so export the captions (`.vtt`/`.srt`/`.txt`) and audio from Echo360, or use a direct media link; StudyForge never logs in anywhere.
+- **Lecture recordings:** add a recording to any lecture and play it with chapters and timed insights that follow along (the player streams with HTTP range requests, so a long recording isn't downloaded in full). **Tools > Lecture recording to insights** turns a lecture's captions into timed exam tips, clinical links and intuitions with your AI writer. Echo360 needs your university login, so export the captions (`.vtt`/`.srt`/`.txt`) and audio from Echo360, or use a direct media link; MedForge never logs in anywhere.
 - **Lab practice:** a protocol with safety notes and a tickable checklist, calculation drills that check your answer, and **lab calculators** (C₁V₁ = C₂V₂, solute mass, plate counts, hemocytometer, Beer–Lambert, Henderson–Hasselbalch)
 - **Clinical practice:** a staged patient case (history → exam → tests → interpretation → diagnosis → management principles) with feedback and a score, plus an OSCE-style skill checklist with critical steps
 
@@ -131,12 +131,12 @@ Reference ranges vary between labs and textbooks; use your course's values in ex
 > **Current status: runs locally, no paid API keys yet.**
 > - Study blocks are written by a **local model through [Ollama](https://ollama.com)** on your own computer (free and offline). Stronger models are optional: see **Choosing the AI model** below.
 > - Papers are found with **Crossref**, a free scholarly index that needs no key.
-> - **Perplexity, Elicit and Consensus are used manually in your own browser for now.** Search on perplexity.ai, elicit.com or consensus.app, then paste the answer, links or an exported list into the "Paste results" box. StudyForge picks out the DOIs and links and cites them.
+> - **Perplexity, Elicit and Consensus are used manually in your own browser for now.** Search on perplexity.ai, elicit.com or consensus.app, then paste the answer, links or an exported list into the "Paste results" box. MedForge picks out the DOIs and links and cites them.
 > - The code that calls the Perplexity, Elicit, Consensus, OpenRouter, Gemini and OpenAI APIs directly is already written (from their public docs) and switches on as soon as you add a key in Settings (or in `.env` for the command-line tool). It has only been tested with mocked responses so far, not against the live services.
 
 ## 🚀 Run it
 
-StudyForge runs entirely in the browser: no server, no account. Progress, notes and keys stay on your device.
+MedForge runs entirely in the browser: no server, no account. Progress, notes and keys stay on your device.
 
 **On your computer** (needs [Node.js](https://nodejs.org) 22.13+):
 
@@ -147,13 +147,13 @@ npm install
 npm run dev
 ```
 
-Then open http://localhost:5173/study-forge/. For the AI writer, install [Ollama](https://ollama.com) and run `ollama pull qwen2.5` (see **Choosing the AI model**).
+Then open http://localhost:5173/med-forge/. For the AI writer, install [Ollama](https://ollama.com) and run `ollama pull qwen2.5` (see **Choosing the AI model**).
 
 **Publish it on GitHub Pages:**
 
 1. Push this repo to GitHub.
 2. In the repo, go to **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**.
-3. Every push to `main` checks the code, builds the site and deploys it (`.github/workflows/ci.yml`). Classmates just open `https://<your-username>.github.io/study-forge/`.
+3. Every push to `main` checks the code, builds the site and deploys it (`.github/workflows/ci.yml`). Classmates just open `https://<your-username>.github.io/med-forge/`.
 
 **One file to double-click or send to a classmate:**
 
@@ -165,8 +165,8 @@ It writes **`web/index.html`** (about 1.4 MB, everything inlined). Build outputs
 
 ### 🖥️ Previewing in VS Code
 
-- **One click:** open the **Run and Debug** panel (⇧⌘D), choose **Preview web edition (Edge)** (or Chrome), and press ▶. VS Code starts the dev server and opens `http://localhost:5173/study-forge/`.
-- **Inside VS Code:** run `npm run dev`, then ⇧⌘P → **Simple Browser: Show** and paste `http://localhost:5173/study-forge/`.
+- **One click:** open the **Run and Debug** panel (⇧⌘D), choose **Preview web edition (Edge)** (or Chrome), and press ▶. VS Code starts the dev server and opens `http://localhost:5173/med-forge/`.
+- **Inside VS Code:** run `npm run dev`, then ⇧⌘P → **Simple Browser: Show** and paste `http://localhost:5173/med-forge/`.
 - **Live Server extension:** run `npm run single` once, then right-click **`web/index.html`** → **Open with Live Server**. Because Live Server serves over `http://localhost`, Ollama works there too.
 
 ### 🦙 Using Ollama from the published site
@@ -254,12 +254,61 @@ Each student adds their own keys in **Settings**. They're saved only in that bro
 
 For the command-line tool, copy `.env.example` to `.env.local` and fill in what you have; `npm run cli -- providers` shows which are active.
 
+## 🏗️ Architecture
+
+MedForge is a static single-page app: no server and no database. GitHub Pages serves the files, and everything else happens in the student's browser.
+
+```mermaid
+flowchart TB
+    GP["☁️ GitHub Pages<br/>static files only"] --> Shell
+
+    subgraph Browser["🌐 Runs entirely in the student's browser"]
+        Shell["App shell + hash router<br/>site/src/App.tsx"]
+        Shell --> P1["🏥 Course hub<br/>notes · questions · exam"]
+        Shell --> P2["📅 Daily review<br/>✂️ snipper"]
+        Shell --> P3["🧰 Tools<br/>dosage · research · lectures"]
+        Shell --> P4["✍️ Generator<br/>📓 notebook · ⚙️ settings"]
+        P1 & P2 & P3 --> M["📦 Course modules · site/src/med/<br/>courses · SM-2 progress · cards<br/>3D models · scratchpad · lecture player"]
+        P4 & P3 --> E["⚙️ Engine · src/engine/<br/>prompts · format checker<br/>AI writers · paper search"]
+        M --> S[("💾 localStorage<br/>progress · cards · packs · notes · keys")]
+        P4 --> S
+    end
+
+    E -->|"writer"| O["🦙 Ollama<br/>on your computer"]
+    E -->|"writer, your key"| A["🤖 OpenRouter · Gemini · OpenAI"]
+    E -->|"evidence"| C["📚 Crossref · OpenAlex · Perplexity"]
+```
+
+| Layer | Where | What it does |
+|---|---|---|
+| App shell | `site/src/App.tsx`, `router.ts` | Hash routes like `#/c/<course>/questions/<id>`, so the site works on GitHub Pages and from one file |
+| Pages | `site/src/med/pages/`, `site/src/pages/` | Course hub, daily review, snipper, tools, generator, notebook, settings |
+| Course modules | `site/src/med/` | Course data and packs, SM-2 progress, snipped cards, 3D models, scratchpad, lecture player, nursing and research calculators |
+| Engine | `src/engine/` | Block format (prompts, parser, validator), generation pipeline, advisor, AI writers (Ollama, OpenAI-compatible), paper search |
+| Storage | the browser's `localStorage` | Everything a student saves stays on their device; export/import files move it elsewhere |
+| Build | `site/vite.config.ts`, `.github/workflows/ci.yml` | Vite builds the site and the one-file copy; CI tests, then publishes to Pages |
+| CLIs | `src/cli.ts`, `scripts/course.ts` | Generate and lint packs from the terminal; create, check, bundle and pack course folders |
+
 ## 🗺️ Roadmap
 
-- Spaced-repetition review of saved study blocks
-- Anki export and a format eval for the prompts
+```mermaid
+flowchart TB
+    subgraph Now["✅ Shipped"]
+        direction LR
+        N1["Course hub<br/>+ 3D models"] ~~~ N2["SM-2 daily review<br/>+ exam day"] ~~~ N3["Snipper · scratchpad<br/>lecture insights"] ~~~ N4["Health-track generator<br/>Ollama + your key"]
+    end
+    subgraph Next["🔜 Next"]
+        direction LR
+        X1["Snipped cards in IndexedDB<br/>(localStorage caps ~5 MB)"] ~~~ X2["Installable offline app<br/>(PWA)"] ~~~ X3["Spaced review of<br/>saved study blocks"] ~~~ X4["Anki export"]
+    end
+    subgraph Later["🔭 Later"]
+        direction LR
+        L1["Optional sync between<br/>your own devices"] ~~~ L2["Instructor review<br/>mode for content"] ~~~ L3["Accessibility audit"] ~~~ L4["Prompt format eval"]
+    end
+    Now --> Next --> Later
+```
 
-The spaced-repetition and course-space ideas build on [NoobChester/course-noting](https://github.com/NoobChester/course-noting). StudyForge reuses its ideas, not its code.
+The spaced-repetition and course-space ideas build on [NoobChester/course-noting](https://github.com/NoobChester/course-noting). MedForge reuses its ideas, not its code.
 
 ## 📁 What's in the repo
 

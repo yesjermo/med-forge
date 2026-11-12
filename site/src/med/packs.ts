@@ -30,7 +30,7 @@ const LOCAL_COURSES: Course[] = Object.entries(localModules).flatMap(([path, dat
 });
 
 function checkCourse(x: unknown): string[] {
-  if (!looksLikeCourse(x)) return ["it isn't a StudyForge course (missing id, title, code, topics or content lists)"];
+  if (!looksLikeCourse(x)) return ["it isn't a MedForge course (missing id, title, code, topics or content lists)"];
   try {
     return validateCourse(x);
   } catch {
@@ -78,13 +78,13 @@ export function createCourseRegistry(
       try {
         data = JSON.parse(text);
       } catch {
-        throw new Error("That file isn't valid JSON. Choose a .json course pack exported from StudyForge.");
+        throw new Error("That file isn't valid JSON. Choose a .json course pack exported from MedForge.");
       }
       if (typeof data === "object" && data !== null && "format" in data) {
         const pack = data as { format: unknown; version?: unknown; course?: unknown };
         if (pack.format !== PACK_FORMAT) throw new Error(`Unknown pack format "${String(pack.format)}"; expected "${PACK_FORMAT}".`);
         if (typeof pack.version === "number" && pack.version > PACK_VERSION) {
-          throw new Error(`This pack uses format version ${pack.version}; this version of StudyForge reads version ${PACK_VERSION}. Update the app and try again.`);
+          throw new Error(`This pack uses format version ${pack.version}; this version of MedForge reads version ${PACK_VERSION}. Update the app and try again.`);
         }
         data = pack.course;
       }

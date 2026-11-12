@@ -45,7 +45,7 @@ export class ProviderError extends Error {
   }
 }
 
-export const USER_AGENT = "StudyForge/0.1 (study-blocks generator; +https://github.com)";
+export const USER_AGENT = "MedForge/0.1 (study-blocks generator; +https://github.com)";
 
 /** Identify ourselves from Node; browsers' CORS rules for Crossref/OpenAlex reject a User-Agent header. */
 export function nodeOnlyHeaders(): Record<string, string> {

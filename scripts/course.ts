@@ -12,14 +12,14 @@ const cwd = process.cwd();
 const COURSES_DIR = path.resolve(cwd, "courses");
 const LOCAL_DIR = path.resolve(cwd, "site", "src", "med", "local");
 
-const USAGE = `StudyForge course folders
+const USAGE = `MedForge course folders
 
 Usage: npx tsx scripts/course.ts <command>   (or npm run course:<command> -- ...)
 
   new <CODE> "<Course title>"   Create courses/<CODE>/ with example files to replace
   bundle [CODE]                 Validate course folders and write site/src/med/local/<id>.json
                                 (the web app picks these up on the next dev/build)
-  pack <CODE> [out.json]        Write one shareable pack file (default ./<id>.study-forge-pack.json)
+  pack <CODE> [out.json]        Write one shareable pack file (default ./<id>.med-forge-pack.json)
                                 to import in the app under Tools > Add or import a course
   check                         Validate every course folder without writing anything
   help                          Show this help
@@ -246,7 +246,7 @@ Delete these example files once you've written your own.`
 
 const README = (code: string, id: string) => `# ${code} course folder
 
-This folder is a StudyForge course. It stays on your computer: \`courses/\` is git-ignored,
+This folder is a MedForge course. It stays on your computer: \`courses/\` is git-ignored,
 so nothing here is committed or published. To use it in the web app run
 \`npm run course:bundle\`; to share it, run \`npm run course:pack -- ${code}\` and send the
 .json pack file (classmates import it under Tools > Add or import a course).
@@ -311,7 +311,7 @@ function cmdBundle(only?: string) {
 function cmdPack(code?: string, outArg?: string) {
   if (!code) fail("Usage: npm run course:pack -- <CODE> [out.json]", 2);
   const [{ folder, course }] = loadCourses(code) as [{ folder: string; course: Course }];
-  const out = path.resolve(cwd, outArg ?? `${course.id}.study-forge-pack.json`);
+  const out = path.resolve(cwd, outArg ?? `${course.id}.med-forge-pack.json`);
   fs.writeFileSync(out, JSON.stringify(wrapPack(course), null, 2) + "\n");
   console.log(`✓ courses/${folder}/ → ${path.relative(cwd, out) || out}  ${summary(course)}
 Import it in the app under Tools > Add or import a course. Only share material you're allowed to share.`);

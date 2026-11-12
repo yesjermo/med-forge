@@ -68,7 +68,7 @@ export function splitSections(
 }
 
 /**
- * Parse study-forge block markup.
+ * Parse med-forge block markup.
  *
  * The parser is lenient: it always returns every block it can find and reports
  * structural problems (nesting, unclosed blocks, stray text) as issues instead of throwing.

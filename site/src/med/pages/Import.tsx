@@ -617,7 +617,7 @@ export function ImportPage({ refresh }: { refresh: () => void }) {
         <div className="result-head">
           <h2 id="snip-saved-h">Your cards ({cards.length})</h2>
           <div className="actions">
-            <button type="button" className="secondary small" disabled={!cards.length} onClick={() => download(`study-forge-my-cards-${new Date().toISOString().slice(0, 10)}.json`, store.exportJson())}>
+            <button type="button" className="secondary small" disabled={!cards.length} onClick={() => download(`med-forge-my-cards-${new Date().toISOString().slice(0, 10)}.json`, store.exportJson())}>
               Export
             </button>
             <label className="button secondary small snip-file-btn">

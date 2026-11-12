@@ -51,6 +51,30 @@ describe("ApiWriter (OpenAI-compatible)", () => {
     await expect(api(offline).complete({ system: "", user: "" })).rejects.toBeInstanceOf(WriterUnavailableError);
   });
 
+  it("sends OpenAI's reasoning-model parameters only to OpenAI", async () => {
+    const bodies: Record<string, unknown>[] = [];
+    const fake = (async (_url: string, init: RequestInit) => {
+      bodies.push(JSON.parse(String(init.body)));
+      return sse([{ choices: [{ delta: { content: "ok" } }] }]);
+    }) as unknown as typeof fetch;
+    await new ApiWriter({ name: "openai", label: "OpenAI", baseUrl: "https://api.openai.com/v1", apiKey: "k", model: "gpt-5-mini", fetch: fake }).complete({ system: "", user: "", maxTokens: 500 });
+    await api(fake).complete({ system: "", user: "", maxTokens: 500 });
+    expect(bodies[0]).toMatchObject({ max_completion_tokens: 500 });
+    expect(bodies[0]).not.toHaveProperty("temperature");
+    expect(bodies[0]).not.toHaveProperty("max_tokens");
+    expect(bodies[1]).toMatchObject({ max_tokens: 500, temperature: 0.2 });
+  });
+
+  it("accepts a non-streamed JSON reply and skips non-JSON events", async () => {
+    const json = (async () =>
+      new Response(JSON.stringify({ choices: [{ message: { content: "whole answer" }, finish_reason: "stop" }] }), {
+        headers: { "content-type": "application/json" },
+      })) as unknown as typeof fetch;
+    expect((await api(json).complete({ system: "", user: "" })).text).toBe("whole answer");
+    const pings = (async () => sse(["data: ping", { choices: [{ delta: { content: "hi" } }] }, "data: [DONE]"])) as unknown as typeof fetch;
+    expect((await api(pings).complete({ system: "", user: "" })).text).toBe("hi");
+  });
+
   it("strips reasoning preambles", () => {
     expect(stripThinking("<think>\nhmm\n</think>\n\nanswer")).toBe("answer");
   });

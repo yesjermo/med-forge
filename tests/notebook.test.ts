@@ -78,7 +78,7 @@ describe("notebook", () => {
     nb.addPost({ ...post, author: "ada" });
     const before = nb.exportJson();
     expect(() => nb.importJson("not json")).toThrow(NotebookError);
-    expect(() => nb.importJson(JSON.stringify({ format: "other", posts: [] }))).toThrow("StudyForge notebook");
+    expect(() => nb.importJson(JSON.stringify({ format: "other", posts: [] }))).toThrow("MedForge notebook");
     expect(() => nb.importJson(JSON.stringify({ format: "study-forge-notebook", version: 1, posts: [{ id: "x" }] }))).toThrow(
       NotebookError,
     );

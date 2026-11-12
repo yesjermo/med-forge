@@ -32,6 +32,8 @@ export interface Progress {
 }
 
 const DAY = 24 * 60 * 60 * 1000;
+// Browser-storage keys and export formats keep the original "study-forge" prefix (the app was renamed
+// to MedForge), so students' saved progress and exported files keep working.
 export const STORAGE_KEY = "study-forge:med-progress";
 
 /** The SM-2 recall scale, 0–5: grade, label, what it means. Below 3 the card comes back tomorrow. */
@@ -57,6 +59,11 @@ export function sm2(prev: Sm2, grade: number, now: number): Sm2 {
   const reps = prev.reps + 1;
   const interval = reps === 1 ? 1 : reps === 2 ? 6 : Math.round(prev.interval * ef);
   return { ef, interval, reps, due: now + interval * DAY };
+}
+
+/** When the item was last graded (every grade sets due = grade time + interval days); -Infinity if never. */
+export function lastReviewedAt(s: Sm2): number {
+  return s.interval > 0 ? s.due - s.interval * DAY : -Infinity;
 }
 
 /** Status shown on the dashboard from the latest grade. */

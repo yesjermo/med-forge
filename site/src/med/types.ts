@@ -1,5 +1,5 @@
 /**
- * Content model for a medical-science course pack. Text fields are StudyForge markup:
+ * Content model for a medical-science course pack. Text fields are MedForge markup:
  * plain text with $math$ / $$display$$, "- " bullets, "1. " steps and "> " callouts.
  */
 

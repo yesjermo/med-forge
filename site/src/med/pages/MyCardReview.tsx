@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
 import type { MyCard } from "../mycards";
+import { GRADES } from "../progress";
 import "./import.css";
-
-export const MY_CARD_GRADES = [
-  [0, "Blankout"],
-  [1, "Wrong"],
-  [2, "Hard"],
-  [3, "OK"],
-  [4, "Good"],
-  [5, "Mastered 🎉"],
-] as const;
 
 const typing = (t: EventTarget | null) =>
   t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
@@ -76,8 +68,8 @@ export function MyCardFace({ card, onGrade }: { card: MyCard; onGrade: (g: numbe
           <div className="mycard-rate">
             <p>How well did you do? This schedules the next review.</p>
             <div className="mycard-grades" role="group" aria-label="Grade your answer">
-              {MY_CARD_GRADES.map(([g, label]) => (
-                <button key={g} type="button" className={`secondary mycard-grade g${g}`} onClick={() => onGrade(g)} aria-keyshortcuts={String(g)}>
+              {GRADES.map(([g, label, what]) => (
+                <button key={g} type="button" title={what} className={`secondary mycard-grade g${g}`} onClick={() => onGrade(g)} aria-keyshortcuts={String(g)}>
                   <kbd aria-hidden>{g}</kbd> {label}
                 </button>
               ))}

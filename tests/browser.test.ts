@@ -26,7 +26,7 @@ describe("browser-safe engine", () => {
       return new Response(JSON.stringify({ message: { items: [] } }));
     }) as unknown as typeof fetch;
     await new CrossrefProvider().search("stroop", { limit: 1, fetch: f });
-    expect(headers["User-Agent"]).toMatch(/StudyForge/);
+    expect(headers["User-Agent"]).toMatch(/MedForge/);
   });
 
   it("an Ollama CORS block from a website explains OLLAMA_ORIGINS with the exact origin", async () => {

@@ -109,7 +109,7 @@ describe("course registry (packs)", () => {
     expect(() => reg.importJson(JSON.stringify(builtIn[0]))).toThrow(/built-in course already uses the id/);
     expect(() => reg.importJson(JSON.stringify({ ...example(), id: "my-local" }))).toThrow(/local course already uses/);
     expect(() => reg.importJson("{not json")).toThrow(/isn't valid JSON/);
-    expect(() => reg.importJson(JSON.stringify({ hello: 1 }))).toThrow(/isn't a StudyForge course/);
+    expect(() => reg.importJson(JSON.stringify({ hello: 1 }))).toThrow(/isn't a MedForge course/);
     expect(() => reg.importJson(JSON.stringify({ format: "other", course: example() }))).toThrow(/Unknown pack format/);
     expect(() => reg.importJson(JSON.stringify({ ...example(), questions: [] }))).toThrow(/needs at least 6 questions/);
     expect(reg.all().some((e) => e.source === "imported")).toBe(false);
@@ -175,7 +175,7 @@ describe("scripts/course.ts CLI", () => {
   });
 
   it("new then bundle writes site/src/med/local/<id>.json in the working directory", () => {
-    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "study-forge-course-"));
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "med-forge-course-"));
     try {
       expect(run(cwd, "new", "BIOL113", "Human Anatomy")).toMatch(/Created courses\/BIOL113/);
       const dir = path.join(cwd, "courses", "BIOL113");
@@ -190,7 +190,7 @@ describe("scripts/course.ts CLI", () => {
       expect(out.cases[0]!.setting).toMatch(/Educational simulation/);
 
       run(cwd, "pack", "BIOL113");
-      const pack = JSON.parse(fs.readFileSync(path.join(cwd, "biol-113.study-forge-pack.json"), "utf8"));
+      const pack = JSON.parse(fs.readFileSync(path.join(cwd, "biol-113.med-forge-pack.json"), "utf8"));
       expect(pack).toMatchObject({ format: PACK_FORMAT, version: 1, course: { id: "biol-113" } });
       expect(createCourseRegistry(null, COURSES, []).importJson(JSON.stringify(pack)).course.id).toBe("biol-113");
     } finally {
@@ -199,7 +199,7 @@ describe("scripts/course.ts CLI", () => {
   }, 60_000);
 
   it("check fails with the file name when a folder is broken; unknown command exits 2", () => {
-    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "study-forge-course-"));
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "med-forge-course-"));
     try {
       run(cwd, "new", "CHEM2", "Chemistry");
       const q = path.join(cwd, "courses", "CHEM2", "questions", "chem2-q1.md");
