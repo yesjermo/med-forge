@@ -1,0 +1,18 @@
+{
+  // Terminal → Run Task… (or the Run and Debug panel, which starts these for you).
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Web edition: dev server",
+      "detail": "npm run dev → http://localhost:5173/study-forge/",
+      "type": "npm",
+      "script": "dev",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": { "regexp": "^x{9999}$" },
+        "background": { "activesBegin": true, "beginsPattern": "VITE v", "endsPattern": "Local:" }
+      }
+    }
+  ]
+}

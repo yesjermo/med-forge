@@ -1,0 +1,65 @@
+/* Research toolkit + terminology flashcards. Colours come from tokens only. */
+
+.rt-note { margin: -16px 0 20px; }
+.rt-tabs { overflow-x: auto; scrollbar-width: thin; }
+.rt-tabs button { white-space: nowrap; }
+
+/* Code block for generated queries and citations */
+.rt-code { display: block; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; margin: 6px 0 10px; font-size: 0.86rem; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+.rt-question { font-size: 1.05rem; font-weight: 650; margin: 4px 0 14px; overflow-wrap: anywhere; }
+.rt-section + .rt-section { margin-top: 18px; }
+.rt-section h3 { font-size: 0.95rem; margin: 0 0 6px; }
+.rt-filters { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px 12px; margin: 0 0 16px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+.rt-filters legend { padding: 0 6px; font-weight: 650; font-size: 0.88rem; }
+.rt-filters .field { margin: 0; flex-direction: row; align-items: center; gap: 8px; }
+.rt-filters select { width: auto; }
+
+/* 2×2 table */
+.rt-toggle { display: inline-flex; border: 1px solid var(--control-border); border-radius: 999px; padding: 3px; gap: 2px; margin-bottom: 14px; flex-wrap: wrap; }
+.rt-toggle button { border-radius: 999px; background: transparent; color: var(--text); border-color: transparent; padding: 5px 14px; font-size: 0.88rem; }
+.rt-toggle button:hover:not(:disabled) { background: var(--surface-2); color: var(--text); border-color: transparent; }
+.rt-toggle button[aria-pressed="true"] { background: var(--secondary-soft); color: var(--secondary-ink); }
+@media (prefers-color-scheme: dark) { .rt-toggle button[aria-pressed="true"] { color: var(--secondary-text); } }
+
+.rt-2x2 { display: grid; grid-template-columns: minmax(70px, auto) minmax(0, 1fr) minmax(0, 1fr); gap: 6px; align-items: center; max-width: 520px; margin-bottom: 14px; }
+.rt-2x2 .rt-head { font-size: 0.8rem; font-weight: 700; color: var(--muted); text-align: center; }
+.rt-2x2 .rt-rowhead { font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+.rt-2x2 .rt-cell { display: flex; flex-direction: column; gap: 2px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 8px; font-size: 0.75rem; color: var(--muted); font-weight: 650; min-width: 0; }
+.rt-2x2 .rt-cell input { width: 100%; min-width: 0; font-variant-numeric: tabular-nums; }
+
+.rt-results { width: 100%; border-collapse: collapse; font-size: 0.92rem; font-variant-numeric: tabular-nums; margin: 6px 0 12px; }
+.rt-results th, .rt-results td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.rt-results th { font-weight: 650; }
+.rt-results td { overflow-wrap: anywhere; }
+.rt-interpret { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+
+/* Evidence guide */
+.rt-pyramid { list-style: none; padding: 0; margin: 10px 0 18px; display: grid; gap: 8px; }
+.rt-pyramid li { border: 1px solid var(--border); border-left: 4px solid var(--secondary); border-radius: var(--radius-sm); padding: 10px 12px; background: var(--surface); }
+.rt-pyramid li strong { display: block; margin-bottom: 2px; }
+.rt-pyramid .rt-can, .rt-pyramid .rt-cant { display: block; font-size: 0.9rem; margin-top: 2px; }
+.rt-pyramid .rt-cant { color: var(--muted); }
+.rt-checklist { padding-left: 20px; }
+.rt-checklist li { margin: 4px 0; }
+
+/* Terminology */
+.term-groups h2 { font-size: 1rem; margin: 18px 0 8px; }
+.term-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
+.term-list li { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; background: var(--surface); min-width: 0; }
+.term-part { font-weight: 750; font-family: var(--font-mono), ui-monospace, monospace; }
+.term-list .term-meaning { display: block; }
+.term-list .term-example { display: block; color: var(--muted); font-size: 0.86rem; overflow-wrap: anywhere; }
+
+.flashcard { border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface-2); padding: 28px 18px; text-align: center; margin: 12px 0 14px; min-height: 170px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+.flashcard .term-part { font-size: 1.9rem; overflow-wrap: anywhere; }
+.flashcard .term-meaning { font-size: 1.15rem; font-weight: 650; }
+.flashcard .term-example { color: var(--muted); overflow-wrap: anywhere; }
+.flashcard:focus-visible { outline: 3px solid color-mix(in oklch, var(--primary) 45%, transparent); outline-offset: 2px; }
+.term-counts { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 6px; }
+.kbd { font-family: var(--font-mono), monospace; font-size: 0.8em; border: 1px solid var(--border-strong); border-radius: 4px; padding: 0 5px; background: var(--surface); }
+
+@media (max-width: 560px) {
+  .rt-2x2 { grid-template-columns: minmax(56px, auto) minmax(0, 1fr) minmax(0, 1fr); gap: 4px; }
+  .rt-results th, .rt-results td { padding: 5px 4px; }
+  .flashcard .term-part { font-size: 1.5rem; }
+}

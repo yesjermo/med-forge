@@ -1,0 +1,79 @@
+/* Lecture player with synced notes, and the lecture-import page. Colours come from tokens only. */
+
+.lp { border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); padding: 12px 14px; margin: 12px 0 16px; display: grid; gap: 10px; min-width: 0; }
+.lp audio { display: none; }
+.lp .hint { margin: 0; }
+.lp-hint { font-size: 0.82rem; }
+
+/* Local file picker: a styled label; the input stays focusable for keyboards. */
+.lp-file { position: relative; display: inline-block; margin: 0 0 10px; }
+.lp-file input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.lp-file .button-like { display: inline-block; padding: 6px 12px; border: 1px solid var(--control-border); border-radius: var(--radius-sm); background: var(--surface); color: var(--primary-text); font-size: 0.88rem; font-weight: 600; }
+.lp-file:hover .button-like { background: var(--primary-soft); border-color: var(--primary); }
+.lp-file:focus-within .button-like { outline: 2px solid var(--primary); outline-offset: 2px; }
+.lp .lp-file { margin: 0; }
+
+.lp-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.lp-play { min-width: 76px; }
+.lp-time { font-variant-numeric: tabular-nums; font-size: 0.9rem; color: var(--muted); margin-left: auto; }
+.lp-speed select { width: auto; }
+
+.lp-seek { position: relative; padding-top: 10px; }
+.lp-seek input[type="range"] { width: 100%; margin: 0; accent-color: var(--primary); }
+.lp-markers { position: absolute; top: 0; left: 8px; right: 8px; height: 10px; pointer-events: none; }
+.lp-marker { position: absolute; top: 0; width: 3px; height: 9px; margin-left: -1px; border-radius: 1px; background: var(--muted); }
+.lp-marker.chapter { width: 2px; height: 10px; background: var(--text); }
+.lp-marker.exam_tip { background: var(--secondary); }
+.lp-marker.clinical_link { background: var(--coral); }
+.lp-marker.intuition { background: var(--violet); }
+
+.lp-error { color: var(--error); background: var(--error-soft); border-radius: var(--radius-sm); padding: 6px 10px; margin: 0; font-size: 0.9rem; overflow-wrap: anywhere; }
+
+.lp-notes-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.lp-notes-head h3 { margin: 0; font-size: 0.95rem; }
+.lp-add { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.lp-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; max-height: 340px; overflow-y: auto; overscroll-behavior: contain; position: relative; }
+.lp-item { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 4px 10px; padding: 6px 8px; border-radius: var(--radius-sm); border-left: 3px solid transparent; min-width: 0; }
+.lp-item.chapter { background: var(--surface-2); }
+.lp-item[aria-current="true"] { background: var(--primary-soft); border-left-color: var(--primary); }
+.lp-item .tag { font-size: 0.72rem; }
+.lp-item.insight.exam_tip .tag { color: var(--secondary-text); background: var(--secondary-soft); }
+.lp-item.insight.clinical_link .tag { color: var(--coral); background: var(--coral-soft); }
+.lp-item.insight.intuition .tag { color: var(--violet); background: var(--violet-soft); }
+.lp-jump { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.8rem; padding: 2px 6px; background: transparent; color: var(--primary-text); border: 1px solid var(--control-border); border-radius: var(--radius-sm); flex: none; }
+.lp-jump:hover:not(:disabled) { background: var(--primary-soft); border-color: var(--primary); color: var(--primary-text); }
+.lp-text { flex: 1 1 200px; min-width: 0; font-size: 0.93rem; overflow-wrap: anywhere; }
+.lp-text .katex { white-space: normal; }
+.lp-item-actions { display: flex; gap: 6px; flex: none; }
+
+.lp-edit { display: grid; grid-template-columns: minmax(0, 90px) minmax(0, 160px) minmax(0, 1fr); gap: 8px; width: 100%; align-items: end; }
+.lp-edit .field { margin: 0; min-width: 0; }
+.lp-edit input, .lp-edit select, .lp-edit textarea { width: 100%; min-width: 0; }
+.lp-edit-text { grid-column: 1 / -1; }
+.lp-edit .lp-item-actions { grid-column: 1 / -1; }
+
+.lp-add-recording { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin: 8px 0 12px; }
+
+/* Import page */
+.lecture-import .field { display: flex; flex-direction: column; gap: 4px; margin: 0 0 12px; min-width: 0; }
+.lecture-import .field input, .lecture-import .field textarea, .lecture-import .field select { width: 100%; min-width: 0; }
+.lecture-import textarea { font-family: var(--font-mono); font-size: 0.85rem; }
+.lecture-import .lp-edit textarea { font-family: inherit; font-size: 0.93rem; }
+.li-run { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.li-run .field { margin: 0; flex: 1 1 220px; }
+.li-meta { display: grid; grid-template-columns: minmax(0, 110px) minmax(0, 1fr); gap: 12px; }
+.li-progress { margin-top: 10px; }
+.li-tail { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; font-size: 0.78rem; max-height: 120px; overflow: hidden; white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 0; }
+.li-problems { margin: 10px 0 0; padding-left: 20px; }
+.li-save { border-top: 1px solid var(--border); margin-top: 16px; padding-top: 12px; }
+.li-save h3 { margin: 0 0 8px; font-size: 0.95rem; }
+.li-save code { overflow-wrap: anywhere; }
+.li-ok { color: var(--ok); background: var(--ok-soft); border-radius: var(--radius-sm); padding: 6px 10px; margin: 10px 0 0; font-size: 0.9rem; }
+
+@media (max-width: 480px) {
+  .lp { padding: 10px; }
+  .lp-time { margin-left: 0; width: 100%; order: 5; }
+  .lp-edit { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .lp-item-actions { width: 100%; justify-content: flex-end; }
+}

@@ -1,0 +1,16 @@
+node_modules/
+coverage/
+*.tsbuildinfo
+.env
+.env*.local
+.DS_Store
+.claude/
+# Build outputs (npm run build / npm run single). GitHub Pages builds them from source.
+site/dist/
+site/dist-single/
+web/
+
+# Private university courses (like course-noting): kept on your computer only
+courses/
+site/src/med/local/*.json
+*.study-forge-pack.json

@@ -1,0 +1,22 @@
+{
+  // Run and Debug panel (⇧⌘D): pick one and press ▶. It starts the dev server, then opens the browser.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Preview web edition (Edge)",
+      "type": "msedge",
+      "request": "launch",
+      "url": "http://localhost:5173/study-forge/",
+      "preLaunchTask": "Web edition: dev server",
+      "webRoot": "${workspaceFolder}/site"
+    },
+    {
+      "name": "Preview web edition (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173/study-forge/",
+      "preLaunchTask": "Web edition: dev server",
+      "webRoot": "${workspaceFolder}/site"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+/* Nursing tools: dosage calculations and normal values. Tokens only, so light/dark both work. */
+
+.nursing-notice { border: 1px solid var(--border); }
+.nursing-notice p { max-width: 80ch; }
+
+.nursing-practice { margin: 0 0 28px; }
+.nursing-controls { align-items: flex-end; margin: 8px 0 4px; }
+.nursing-controls .field { margin: 0; min-width: 220px; flex: 0 1 280px; }
+.nursing-prompt { font-size: 1.02rem; max-width: 70ch; margin: 12px 0; }
+.nursing-feedback { margin-top: 12px; padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface-2); }
+.nursing-feedback.is-ok { background: var(--ok-soft); border-color: color-mix(in oklch, var(--ok) 40%, transparent); }
+.nursing-feedback.is-wrong { background: var(--error-soft); border-color: color-mix(in oklch, var(--error) 40%, transparent); }
+.nursing-feedback p { margin: 0 0 8px; }
+.nursing-working { font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.88rem; color: var(--text); overflow-wrap: anywhere; }
+.nursing-section { margin: 8px 0 4px; font-size: 1.2rem; }
+.nursing-foot { margin-top: 16px; }
+
+/* normal values */
+.nursing-search { max-width: 420px; margin-bottom: 6px; }
+.nursing-group { margin: 0 0 16px; padding: 16px; }
+.normals-scroll { overflow-x: auto; max-width: 100%; }
+.normals { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+.normals th, .normals td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+.normals thead th { color: var(--muted); font-size: 0.8rem; font-weight: 650; background: var(--surface-2); }
+.normals tbody th { font-weight: 600; }
+.normals tbody tr:last-child > * { border-bottom: 0; }
+.normals-range { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; color: var(--primary-text); }
+.normals-note { color: var(--muted); }
+.normals-note span { display: block; }
+.normals-si { color: var(--text); }
+
+/* phones: stack each row as a small card instead of scrolling sideways */
+@media (max-width: 600px) {
+  .normals thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .normals, .normals tbody, .normals tr, .normals th, .normals td { display: block; width: 100%; }
+  .normals tr { padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .normals tbody tr:last-child { border-bottom: 0; }
+  .normals th, .normals td { border: 0; padding: 2px 0; }
+  .normals td::before { content: attr(data-label) ": "; color: var(--muted); font-weight: 600; font-size: 0.8rem; }
+  .normals-range { white-space: normal; }
+  .normals-note span { display: inline; }
+  .normals-note span + span::before { content: " · "; }
+}

@@ -1,0 +1,142 @@
+/* Scratchpad canvas. Builds on the shared tokens in site/src/globals.css. */
+
+.scratchpad {
+  /* Stroke colours (hex/rgb so every canvas implementation can parse them). */
+  --scratch-ink: #1f2433;
+  --scratch-blue: #2f5bd3;
+  --scratch-red: #c8372d;
+  --scratch-green: #2c8a4b;
+  --scratch-amber: #d99a0b;
+  --scratch-violet: #8a3fc4;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+@media (prefers-color-scheme: dark) {
+  .scratchpad {
+    --scratch-ink: #eceae4;
+    --scratch-blue: #8fb0ff;
+    --scratch-red: #ff8f84;
+    --scratch-green: #7fd49a;
+    --scratch-amber: #f5c451;
+    --scratch-violet: #cf9bff;
+  }
+}
+
+.sp-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+}
+.sp-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.scratchpad .sp-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
+  padding: 6px 8px;
+  min-height: 34px;
+  min-width: 34px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  gap: 5px;
+}
+.scratchpad .sp-btn:hover:not(:disabled) {
+  background: var(--surface-2);
+  border-color: transparent;
+  color: var(--text);
+}
+.scratchpad .sp-btn[aria-pressed="true"],
+.scratchpad .sp-btn[aria-pressed="true"]:hover:not(:disabled) {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-text);
+}
+.scratchpad .sp-clear.is-confirm,
+.scratchpad .sp-clear.is-confirm:hover:not(:disabled) {
+  background: var(--error-soft);
+  border-color: var(--error);
+  color: var(--error);
+}
+.sp-icon { flex: none; }
+
+.scratchpad .sp-swatch {
+  width: 26px;
+  height: 26px;
+  min-width: 0;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+.scratchpad .sp-swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--text); }
+.scratchpad .sp-swatch:hover:not(:disabled) { border-color: var(--surface); }
+.sp-c-ink, .sp-c-ink:hover:not(:disabled) { background: var(--scratch-ink); }
+.sp-c-blue, .sp-c-blue:hover:not(:disabled) { background: var(--scratch-blue); }
+.sp-c-red, .sp-c-red:hover:not(:disabled) { background: var(--scratch-red); }
+.sp-c-green, .sp-c-green:hover:not(:disabled) { background: var(--scratch-green); }
+.sp-c-amber, .sp-c-amber:hover:not(:disabled) { background: var(--scratch-amber); }
+.sp-c-violet, .sp-c-violet:hover:not(:disabled) { background: var(--scratch-violet); }
+
+.sp-dot { display: block; border-radius: 50%; background: currentColor; }
+.sp-dot-s { width: 4px; height: 4px; }
+.sp-dot-m { width: 8px; height: 8px; }
+.sp-dot-l { width: 13px; height: 13px; }
+
+.sp-surface {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background-color: var(--surface);
+  overflow: hidden;
+}
+.sp-surface.has-grid {
+  --sp-grid: color-mix(in oklch, var(--border) 70%, transparent);
+  background-image:
+    linear-gradient(to right, var(--sp-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--sp-grid) 1px, transparent 1px);
+  background-size: 5% calc(5% * 1.5);
+}
+.sp-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.sp-canvas.sp-tool-eraser { cursor: cell; }
+.sp-canvas:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; border-radius: var(--radius); }
+.sp-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 16px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+.sp-hint { margin: 0; color: var(--muted); font-size: 0.78rem; }
+
+/* Narrow screens: icon-only tool buttons so the toolbar wraps neatly at 375px. */
+@media (max-width: 520px) {
+  .sp-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .sp-toolbar { gap: 6px; }
+}

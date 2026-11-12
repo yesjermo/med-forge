@@ -1,0 +1,109 @@
+/* Question snipper (#/import) and the "my card" review face. Uses the shared tokens only. */
+
+.snip-lede { max-width: 70ch; margin: -4px 0 16px; }
+
+.snip-drop {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+  border: 2px dashed var(--border-strong); border-radius: var(--radius); padding: 16px 18px; margin: 0 0 16px;
+  background: var(--surface); transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
+}
+.snip-drop.over { border-color: var(--primary); background: var(--primary-soft); }
+.snip-drop label.button { cursor: pointer; }
+.snip-drop label.button:focus-within, .snip-file-btn:focus-within { outline: 2px solid var(--primary); outline-offset: 2px; }
+.snip-file-btn { cursor: pointer; }
+.snip-page-wrap label.button.secondary { background: var(--surface); color: var(--primary-text); border-color: var(--control-border); }
+.snip-page-wrap label.button.secondary:hover { background: var(--primary-soft); border-color: var(--primary); }
+
+.snip-viewer { margin: 0 0 16px; padding: 14px; }
+.snip-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-bottom: 10px; }
+.snip-name { flex: 1 1 160px; min-width: 0; font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.snip-pageno { display: inline-flex; align-items: center; gap: 4px; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+.snip-pageno input { width: 4.2em; padding: 5px 6px; text-align: center; }
+.snip-zoom-label { min-width: 3.4em; text-align: center; font-size: 0.88rem; font-variant-numeric: tabular-nums; color: var(--muted); }
+
+.snip-mode {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--secondary-soft); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 10px; font-size: 0.92rem;
+}
+
+.snip-stage {
+  overflow: auto; max-height: min(78vh, 1100px); border-radius: var(--radius-sm);
+  background: var(--surface-2); padding: 0; overscroll-behavior: contain;
+}
+.snip-sheet { position: relative; margin: 0 auto; min-height: 120px; }
+/* Pages stay white (they're paper) in both themes. */
+.snip-canvas { display: block; width: 100%; height: 100%; background: #fff; box-shadow: var(--shadow); }
+.snip-overlay { position: absolute; inset: 0; cursor: crosshair; touch-action: none; user-select: none; -webkit-user-select: none; }
+.snip-overlay:focus-visible { outline: 3px solid var(--primary); outline-offset: -3px; }
+.snip-rendering { position: absolute; top: 8px; right: 8px; pointer-events: none; }
+
+.snip-box {
+  position: absolute; cursor: move; border: 2px solid var(--primary);
+  background: color-mix(in oklch, var(--primary) 10%, transparent);
+  box-shadow: 0 0 0 9999px oklch(20% 0.02 265 / 0.38);
+}
+.snip-box:focus { outline: none; }
+.snip-box:focus-visible { border-style: dashed; border-color: var(--secondary); }
+.snip-handle {
+  position: absolute; width: 14px; height: 14px; margin: -8px 0 0 -8px;
+  background: var(--surface); border: 2px solid var(--primary); border-radius: 3px;
+}
+/* Bigger touch targets on coarse pointers. */
+@media (pointer: coarse) { .snip-handle { width: 22px; height: 22px; margin: -12px 0 0 -12px; } }
+.h-nw { left: 0; top: 0; cursor: nwse-resize; }
+.h-n { left: 50%; top: 0; cursor: ns-resize; }
+.h-ne { left: 100%; top: 0; cursor: nesw-resize; }
+.h-e { left: 100%; top: 50%; cursor: ew-resize; }
+.h-se { left: 100%; top: 100%; cursor: nwse-resize; }
+.h-s { left: 50%; top: 100%; cursor: ns-resize; }
+.h-sw { left: 0; top: 100%; cursor: nesw-resize; }
+.h-w { left: 0; top: 50%; cursor: ew-resize; }
+
+.snip-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; margin-top: 12px; }
+.snip-actions .hint { margin: 0; max-width: 60ch; }
+
+.snip-form { margin: 0 0 16px; }
+.snip-previews { display: flex; flex-wrap: wrap; gap: 14px; margin: 0 0 14px; }
+.snip-previews figure { margin: 0; flex: 1 1 240px; max-width: 520px; }
+.snip-previews img, .mycard-img {
+  display: block; max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); background: #fff;
+}
+.snip-previews figcaption { margin-top: 4px; display: flex; align-items: center; gap: 6px; }
+.snip-form textarea.snip-short { min-height: 72px; }
+
+.snip-ok { color: var(--ok); background: var(--ok-soft); padding: 10px 12px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.92rem; }
+
+.snip-saved { margin-top: 16px; }
+.snip-list { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 8px; }
+.snip-list li {
+  display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 12px; align-items: center;
+  padding: 8px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+}
+.snip-list img { width: 96px; height: 64px; object-fit: cover; object-position: top left; border-radius: 6px; background: #fff; border: 1px solid var(--border); }
+.snip-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.snip-meta strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 480px) {
+  .snip-list li { grid-template-columns: 64px minmax(0, 1fr); }
+  .snip-list img { width: 64px; height: 48px; }
+  .snip-list li button { grid-column: 1 / -1; justify-self: start; }
+}
+
+/* review face */
+.mycard-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin-bottom: 12px; }
+.mycard-head h2 { margin: 0; font-size: 1.1rem; }
+.mycard-note { margin: 10px 0 0; padding: 8px 12px; border-radius: var(--radius-sm); background: var(--surface-2); white-space: pre-wrap; }
+.mycard-reveal { margin-top: 16px; }
+.mycard-answer { margin-top: 16px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--teal-soft); display: grid; gap: 10px; }
+.mycard-answer-text { margin: 0; white-space: pre-wrap; }
+.mycard-answer .hint { margin: 0; }
+.mycard-rate p { margin: 16px 0 8px; }
+.mycard-grades { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 8px; }
+.mycard-grade { justify-content: flex-start; white-space: nowrap; }
+.mycard-grade.g0, .mycard-grade.g1 { border-color: color-mix(in oklch, var(--error) 55%, var(--control-border)); }
+.mycard-grade.g2 { border-color: color-mix(in oklch, var(--secondary) 70%, var(--control-border)); }
+.mycard-grade.g4, .mycard-grade.g5 { border-color: color-mix(in oklch, var(--ok) 55%, var(--control-border)); }
+.mycard kbd {
+  font-family: var(--font-mono), monospace; font-size: 0.75rem; font-weight: 600; line-height: 1;
+  padding: 2px 5px; border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 4px;
+  background: var(--surface-2); color: var(--muted);
+}

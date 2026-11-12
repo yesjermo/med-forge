@@ -1,0 +1,48 @@
+{
+  "name": "study-forge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Course notes, practice tools and cited study blocks for medical, nursing, pre-med and pre-vet students, with a free local AI writer (Ollama) or your own OpenRouter, Gemini or OpenAI key.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --config site/vite.config.ts",
+    "build": "vite build --config site/vite.config.ts",
+    "preview": "vite preview --config site/vite.config.ts",
+    "single": "vite build --config site/vite.config.ts --mode single",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "cli": "tsx src/cli.ts",
+    "course:new": "tsx scripts/course.ts new",
+    "course:bundle": "tsx scripts/course.ts bundle",
+    "course:pack": "tsx scripts/course.ts pack",
+    "course:check": "tsx scripts/course.ts check"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@fontsource-variable/figtree": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "katex": "^0.19.1",
+    "pdfjs-dist": "^6.5.438",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "file:./scripts/no-canvas",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.6",
+    "vite-plugin-singlefile": "^2.3.4",
+    "vitest": "^5.1.0"
+  },
+  "overrides": {
+    "@napi-rs/canvas": "$@napi-rs/canvas"
+  }
+}

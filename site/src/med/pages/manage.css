@@ -1,0 +1,7 @@
+.manage-courses .panel { margin-top: 16px; }
+.manage-list li { align-items: center; }
+.manage-name { display: inline-flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; min-width: 0; }
+.manage-courses .tag.source-local { color: var(--secondary-text); background: var(--secondary-soft); }
+.manage-courses .tag.source-imported { color: var(--primary-text); background: var(--primary-soft); }
+.manage-cmd { overflow-x: auto; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface-2); font-size: 0.88rem; }
+.manage-courses input[type="file"] { font-weight: 400; }
