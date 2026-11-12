@@ -1,0 +1,6 @@
+{
+  "name": "@napi-rs/canvas",
+  "version": "0.0.0",
+  "description": "Empty stand-in. pdf.js only needs @napi-rs/canvas when it runs in Node; StudyForge uses pdf.js in the browser, so this skips a ~28 MB native download.",
+  "main": "index.js"
+}

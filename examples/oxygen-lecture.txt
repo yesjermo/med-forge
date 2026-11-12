@@ -1,0 +1,7 @@
+Lecture 4 — Oxygen transport
+
+Haemoglobin binds oxygen cooperatively at four sites, so saturation against PO2 is sigmoid. The Hill
+equation describes it: S = PO2^n / (P50^n + PO2^n), with a Hill coefficient n of about 2.7 and a P50
+of about 26 mmHg in adults. Raised CO2, H+, temperature and 2,3-BPG raise P50 and shift the curve
+right (the Bohr effect), so tissues unload more oxygen. Students often read a right shift as higher
+affinity; it means lower affinity. Fetal haemoglobin binds 2,3-BPG weakly and its curve sits left.

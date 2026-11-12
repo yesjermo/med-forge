@@ -1,0 +1,15 @@
+id: meds101-skill-handwash
+title: Hand washing with soap and water
+purpose: Clean hands are the single most effective way to stop infections spreading in clinics and labs.
+items:
+  - text: Removes watches and rings, and rolls sleeves above the wrist
+  - text: Wets hands with water and applies enough soap to cover all surfaces
+    critical: true
+  - text: Rubs palm to palm, then each palm over the back of the other hand with fingers interlaced
+  - text: Rubs between the fingers, the backs of the fingers and around each thumb
+    critical: true
+  - text: Rubs the fingertips into the opposite palm, then each wrist
+  - text: Washes for at least 20 seconds in total
+    critical: true
+  - text: Rinses thoroughly and dries hands completely with a single-use towel
+  - text: Turns off the tap with the towel (or elbow) so clean hands don't touch it

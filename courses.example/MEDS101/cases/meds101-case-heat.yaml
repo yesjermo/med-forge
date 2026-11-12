@@ -1,0 +1,105 @@
+id: meds101-case-heat
+title: A dizzy volunteer at the summer fun run
+topic: Homeostasis
+setting: First-aid tent at a charity run on a hot day. Educational simulation with a fictional patient.
+presentation: >-
+  Sam, 20, has been handing out water in full sun for four hours. They come to the tent saying they
+  feel dizzy, sick and tired. They are sweating heavily and look pale.
+stages:
+  - title: History
+    prompt: Choose the questions most worth asking.
+    mode: multi
+    options:
+      - text: How much have you had to drink today?
+        good: true
+        feedback: "\"Not much. I've been giving the water away, not drinking it.\""
+      - text: Do you feel confused, or has anyone said you're not making sense?
+        good: true
+        feedback: "\"No, I just feel washed out.\" Sam answers clearly and knows where they are."
+      - text: Do you have any medical conditions or take any regular medicines?
+        good: true
+        feedback: "\"No, I'm usually well.\""
+      - text: Which charity is the run for?
+        good: false
+        feedback: Friendly conversation, but it doesn't help you assess Sam.
+      - text: What time did you go to bed last night?
+        good: false
+        feedback: Not the priority when someone is unwell in the heat.
+    debrief: >-
+      Long exposure to heat with little fluid intake points to heat illness. The most important
+      question is about confusion: a change in mental state separates heat stroke (an emergency)
+      from heat exhaustion.
+  - title: Examination
+    prompt: What do you check?
+    mode: multi
+    options:
+      - text: Temperature
+        good: true
+        feedback: 38.6 °C. Raised, but below the 40 °C associated with heat stroke.
+      - text: Pulse and blood pressure
+        good: true
+        feedback: Pulse fast at 108 beats/min; blood pressure on the low side of normal.
+      - text: Level of alertness and orientation
+        good: true
+        feedback: Alert, and knows the day, place and what happened.
+      - text: Eye colour
+        good: false
+        feedback: Doesn't help assess heat illness.
+      - text: Shoe size
+        good: false
+        feedback: Not relevant.
+    debrief: >-
+      A raised temperature with a fast pulse, heavy sweating and a normal mental state fits heat
+      exhaustion. The fast pulse reflects the heart compensating for fluid lost as sweat and for
+      blood diverted to the skin to lose heat.
+  - title: Explaining the physiology
+    prompt: Which homeostatic response is Sam's heavy sweating?
+    mode: single
+    options:
+      - text: Negative feedback to lose heat by evaporation
+        good: true
+        feedback: Correct. Rising body temperature triggers sweating, and evaporation cools the skin.
+      - text: Positive feedback that will keep raising the temperature
+        good: false
+        feedback: Sweating opposes the rise in temperature, so it is negative feedback.
+      - text: A sign that thermoregulation has completely failed
+        good: false
+        feedback: Sam's cooling responses are still working; in heat stroke they can be overwhelmed.
+    debrief: >-
+      Thermoregulation is a negative-feedback loop: the hypothalamus senses the rise and sweat glands
+      and skin blood vessels act as effectors. Sweating costs water and salt, which is why fluid
+      intake matters on hot days.
+  - title: Diagnosis
+    prompt: What is the most likely diagnosis?
+    mode: single
+    options:
+      - text: Heat exhaustion
+        good: true
+        feedback: Correct. Raised temperature, fatigue, nausea and heavy sweating with a normal mental state.
+      - text: Heat stroke
+        good: false
+        feedback: Heat stroke usually involves a temperature above 40 °C with confusion or other changes in brain function.
+      - text: Hypothermia
+        good: false
+        feedback: Sam's temperature is raised, not lowered.
+    debrief: Heat exhaustion is common and treatable, but it can progress to heat stroke if heat exposure continues.
+  - title: First steps
+    prompt: What is the best first approach?
+    mode: single
+    options:
+      - text: Move Sam to shade, loosen clothing, cool the skin and give sips of water while watching closely
+        good: true
+        feedback: Correct. Remove the heat source, help cooling and replace fluid, and call for help if confusion develops.
+      - text: Send Sam back out after a short rest
+        good: false
+        feedback: More heat exposure risks progression to heat stroke.
+      - text: Wrap Sam in a blanket to stop the shivering later
+        good: false
+        feedback: Insulating Sam would trap heat; the aim is to lose it.
+    debrief: >-
+      Remove the person from the heat, cool them and replace fluids. Any confusion, collapse or a
+      temperature that keeps rising needs emergency medical help, because heat stroke is life-threatening.
+teachingPoints:
+  - Thermoregulation is a negative-feedback loop with the hypothalamus as the control centre.
+  - Heavy sweating loses water and salt; a fast pulse helps maintain blood pressure as fluid is lost.
+  - Confusion or a temperature above about 40 °C suggests heat stroke, a medical emergency.

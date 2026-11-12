@@ -1,0 +1,41 @@
+id: meds101-lab-osmosis
+title: Osmosis in potato tissue
+topic: Cells & membranes
+objective: >-
+  Measure the change in mass of potato cylinders left in sucrose solutions of different
+  concentrations, and estimate the concentration that is isotonic with the potato cells.
+safety:
+  - Cut away from your body and fingers with the cork borer and scalpel, on a cutting tile. Report any cuts to the instructor.
+  - Wipe up spilled solutions straight away so nobody slips.
+  - Don't eat or drink in the laboratory, even though the materials are foods.
+materials:
+  - Potato, cork borer, scalpel and cutting tile
+  - Sucrose solutions (0, 0.2, 0.4, 0.6 and 0.8 mol/L) in labelled boiling tubes
+  - Electronic balance (0.01 g), paper towels, ruler and timer
+steps:
+  - text: Cut five potato cylinders with the cork borer and trim each to the same length (about 3 cm).
+    why: Equal size gives equal surface area, so the cylinders exchange water at comparable rates.
+  - text: Blot each cylinder gently with a paper towel and record its starting mass.
+    why: Surface water adds mass that isn't part of the tissue.
+  - text: Place one cylinder in each sucrose solution and start the timer.
+  - text: After 30 minutes, remove each cylinder, blot it in the same way and record its final mass.
+  - text: "Calculate the percentage change in mass for each cylinder: (final − initial) / initial × 100."
+  - text: Plot percentage change in mass against sucrose concentration and find where the line crosses zero.
+    why: The concentration giving no change in mass is approximately isotonic with the potato cells.
+drills:
+  - id: d1
+    prompt: A cylinder's mass rises from 2.50 g to 2.80 g. What is the percentage change in mass?
+    answer: 12
+    tolerance: 0.5
+    unit: "%"
+    working: (2.80 − 2.50) / 2.50 × 100 = 12%.
+  - id: d2
+    prompt: A cylinder's mass falls from 2.40 g to 2.16 g. What is the percentage change in mass?
+    answer: -10
+    tolerance: 0.5
+    unit: "%"
+    working: (2.16 − 2.40) / 2.40 × 100 = −10%.
+resultsGuide: >-
+  Cylinders in dilute solutions (water, 0.2 mol/L) gain mass because the solution is hypotonic to the
+  cells and water enters by osmosis. In concentrated solutions they lose mass and feel floppy. The
+  line usually crosses zero somewhere around 0.2–0.4 mol/L sucrose, but the exact value depends on the potato.

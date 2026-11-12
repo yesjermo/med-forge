@@ -1,0 +1,7 @@
+{
+  "id": "meds-101",
+  "code": "MEDS 101",
+  "title": "Example Course",
+  "description": "An example course folder: cell membranes, osmosis, body fluids and homeostasis. Copy it to courses/ to see how the format works.",
+  "topics": ["Cells & membranes", "Homeostasis"]
+}
