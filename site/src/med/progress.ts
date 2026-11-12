@@ -59,6 +59,11 @@ export function sm2(prev: Sm2, grade: number, now: number): Sm2 {
   return { ef, interval, reps, due: now + interval * DAY };
 }
 
+/** When the item was last graded (every grade sets due = grade time + interval days); -Infinity if never. */
+export function lastReviewedAt(s: Sm2): number {
+  return s.interval > 0 ? s.due - s.interval * DAY : -Infinity;
+}
+
 /** Status shown on the dashboard from the latest grade. */
 export function statusFor(grade: number, reps: number): QuestionStatus {
   if (grade < 3) return "needs_review";

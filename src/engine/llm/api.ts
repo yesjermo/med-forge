@@ -1,6 +1,8 @@
 import { stripThinking } from "./models";
 import { WriterUnavailableError, type CompleteRequest, type CompleteResult, type Writer } from "./types";
 
+const isOpenAI = (baseUrl: string) => /^https:\/\/api\.openai\.com\//.test(`${baseUrl}/`);
+
 export interface ApiWriterOptions {
   /** Shown in messages and summaries, e.g. "openrouter" or "custom". */
   name: string;
@@ -12,7 +14,7 @@ export interface ApiWriterOptions {
 }
 
 interface Chunk {
-  choices?: { delta?: { content?: string | null }; finish_reason?: string | null }[];
+  choices?: { delta?: { content?: string | null }; message?: { content?: string | null }; finish_reason?: string | null }[];
   error?: { message?: string };
 }
 
@@ -43,8 +45,11 @@ export class ApiWriter implements Writer {
         body: JSON.stringify({
           model: this.model,
           stream: true,
-          temperature: 0.2,
-          max_tokens: req.maxTokens ?? 8192,
+          // OpenAI's reasoning models (GPT-5, o-series) take max_completion_tokens and only the default
+          // temperature; every other provider here takes the classic parameters.
+          ...(isOpenAI(baseUrl)
+            ? { max_completion_tokens: req.maxTokens ?? 8192 }
+            : { temperature: 0.2, max_tokens: req.maxTokens ?? 8192 }),
           messages: [
             { role: "system", content: req.system },
             { role: "user", content: req.user },
@@ -70,6 +75,16 @@ export class ApiWriter implements Writer {
       throw new WriterUnavailableError(`${label} returned ${res.status}: ${msg}`);
     }
 
+    // Some compatible servers ignore `stream: true` and send one JSON completion instead.
+    if (!/event-stream/i.test(res.headers.get("content-type") ?? "") && /json/i.test(res.headers.get("content-type") ?? "")) {
+      const body = (await res.json()) as Chunk;
+      if (body.error) throw new WriterUnavailableError(`${label} error: ${body.error.message ?? "unknown"}`);
+      const choice = body.choices?.[0];
+      const whole = choice?.message?.content ?? "";
+      if (whole) req.onText?.(whole);
+      return { text: stripThinking(whole), model: this.model, truncated: choice?.finish_reason === "length" };
+    }
+
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let buf = "";
@@ -78,7 +93,12 @@ export class ApiWriter implements Writer {
     const handle = (line: string) => {
       const data = line.trim().replace(/^data:\s*/, "");
       if (!line.trim().startsWith("data:") || data === "[DONE]") return;
-      const chunk = JSON.parse(data) as Chunk;
+      let chunk: Chunk;
+      try {
+        chunk = JSON.parse(data) as Chunk;
+      } catch {
+        return; // keep-alive or other non-JSON event
+      }
       if (chunk.error) throw new WriterUnavailableError(`${label} error: ${chunk.error.message ?? "unknown"}`);
       const choice = chunk.choices?.[0];
       const delta = choice?.delta?.content ?? "";

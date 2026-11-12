@@ -113,14 +113,16 @@ export async function openPdf(data: ArrayBuffer): Promise<PDFDocumentProxy> {
     disableAutoFetch: true,
     disableStream: true,
   });
+  let needsPassword = false;
   task.onPassword = () => {
+    needsPassword = true;
     void task.destroy();
   };
   try {
     return await task.promise;
   } catch (e) {
     const name = (e as { name?: string }).name;
-    if (name === "PasswordException") throw new Error("This PDF is password-protected. Open it elsewhere and take a screenshot instead.");
+    if (needsPassword || name === "PasswordException") throw new Error("This PDF is password-protected. Open it elsewhere and take a screenshot instead.");
     if (name === "InvalidPDFException") throw new Error("That file doesn't look like a valid PDF.");
     throw e;
   }

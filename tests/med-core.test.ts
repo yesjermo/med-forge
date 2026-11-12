@@ -156,3 +156,15 @@ describe("daily review scale and look-ahead", () => {
     expect(p.due(["a", "b"], t + 30 * 86_400_000)).toEqual(["b", "a"]);
   });
 });
+
+describe("review ahead", () => {
+  it("knows when an item was last graded, so cards reviewed today aren't pulled in again", async () => {
+    const { lastReviewedAt, NEW_SM2, sm2 } = await import("../site/src/med/progress");
+    const t = Date.UTC(2026, 0, 10, 15);
+    expect(lastReviewedAt(NEW_SM2(t))).toBe(-Infinity);
+    expect(lastReviewedAt(sm2(NEW_SM2(t), 5, t))).toBe(t);
+    expect(lastReviewedAt(sm2(NEW_SM2(t), 1, t))).toBe(t);
+    const second = sm2(sm2(NEW_SM2(t), 5, t), 4, t + 86_400_000);
+    expect(lastReviewedAt(second)).toBe(t + 86_400_000);
+  });
+});
