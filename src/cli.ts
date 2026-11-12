@@ -8,7 +8,7 @@ import { PACKS, PACK_NAMES, isPackName } from "./engine/prompts";
 import { providerStatus, selectProviders } from "./engine/research/registry";
 import { lint, formatIssues } from "./engine/validator";
 
-const HELP = `study-forge — turn source material into exchangeable study blocks
+const HELP = `med-forge — turn source material into exchangeable study blocks
 
 Usage:
   npm run cli -- generate --pack <name> [file|-] [options]

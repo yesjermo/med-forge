@@ -1,6 +1,6 @@
 # MEDS 101 · Example Course
 
-An example course folder for StudyForge. Copy it into `courses/` (which is git-ignored) to try
+An example course folder for MedForge. Copy it into `courses/` (which is git-ignored) to try
 the course tools:
 
     cp -r courses.example/MEDS101 courses/MEDS101

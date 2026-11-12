@@ -4,7 +4,7 @@
   "tasks": [
     {
       "label": "Web edition: dev server",
-      "detail": "npm run dev → http://localhost:5173/study-forge/",
+      "detail": "npm run dev → http://localhost:5173/med-forge/",
       "type": "npm",
       "script": "dev",
       "isBackground": true,

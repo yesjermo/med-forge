@@ -133,7 +133,7 @@ export function GeneratorView({
     const url = URL.createObjectURL(new Blob([withReferences() + "\n"], { type: "text/markdown" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${result.blocks[0]?.attrs.id ?? "study-forge-pack"}.md`;
+    a.download = `${result.blocks[0]?.attrs.id ?? "med-forge-pack"}.md`;
     a.click();
     URL.revokeObjectURL(url);
   }

@@ -38,7 +38,7 @@ export function Generate({ mode, settings }: { mode: "generate" | "check"; setti
     <GeneratorView
       mode={mode}
       onModeChange={(m) => (window.location.hash = m === "check" ? "/check" : "/generate")}
-      intro="For medical, nursing, pre-med and pre-vet students. Paste lecture notes, a paper or a case. StudyForge searches for real papers, then writes proof, idea and exchange blocks that cite them, all in your browser."
+      intro="For medical, nursing, pre-med and pre-vet students. Paste lecture notes, a paper or a case. MedForge searches for real papers, then writes proof, idea and exchange blocks that cite them, all in your browser."
       run={run}
       advisor={advisor}
       share={{

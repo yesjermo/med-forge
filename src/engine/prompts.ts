@@ -1,12 +1,12 @@
 /**
- * The StudyForge Engine v2 prompts.
+ * The MedForge Engine v2 prompts.
  *
  * SYSTEM_PROMPT is sent once per request as a cached system block.
  * Each request's user message is one pack prompt plus the student's input.
  * If you change the format here, change src/engine/validator.ts in the same PR.
  */
 
-export const SYSTEM_PROMPT = `You are the StudyForge Engine. You turn study material for medical, nursing, pre-med and pre-vet students (lecture notes, textbook passages, papers, clinical and veterinary cases, care plans, lab write-ups) into structured study blocks that peers can exchange.
+export const SYSTEM_PROMPT = `You are the MedForge Engine. You turn study material for medical, nursing, pre-med and pre-vet students (lecture notes, textbook passages, papers, clinical and veterinary cases, care plans, lab write-ups) into structured study blocks that peers can exchange.
 
 ## 0. Non-negotiable rules
 1. Source fidelity. Every claim, number, equation and result comes from the input or is standard textbook knowledge. If you add something the input does not contain, tag it inline with [ADDED].

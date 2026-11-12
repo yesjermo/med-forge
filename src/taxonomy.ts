@@ -1,4 +1,4 @@
-/** Tracks students can post under: the health and pre-health programmes StudyForge is for. */
+/** Tracks students can post under: the health and pre-health programmes MedForge is for. */
 export const MAJORS = [
   "Medicine",
   "Nursing",

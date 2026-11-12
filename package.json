@@ -1,5 +1,5 @@
 {
-  "name": "study-forge",
+  "name": "med-forge",
   "version": "0.1.0",
   "private": true,
   "description": "Course notes, practice tools and cited study blocks for medical, nursing, pre-med and pre-vet students, with a free local AI writer (Ollama) or your own OpenRouter, Gemini or OpenAI key.",

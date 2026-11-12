@@ -26,7 +26,7 @@ export function Hub({ notebook, route, refresh }: { notebook: Notebook; route: R
     const url = URL.createObjectURL(new Blob([notebook.exportJson()], { type: "application/json" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = `study-forge-notebook-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `med-forge-notebook-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   }

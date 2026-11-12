@@ -32,6 +32,8 @@ export interface Progress {
 }
 
 const DAY = 24 * 60 * 60 * 1000;
+// Browser-storage keys and export formats keep the original "study-forge" prefix (the app was renamed
+// to MedForge), so students' saved progress and exported files keep working.
 export const STORAGE_KEY = "study-forge:med-progress";
 
 /** The SM-2 recall scale, 0–5: grade, label, what it means. Below 3 the card comes back tomorrow. */

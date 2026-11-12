@@ -1,5 +1,5 @@
 /**
- * Which models StudyForge offers. Ollama is the free default; the API providers all speak the
+ * Which models MedForge offers. Ollama is the free default; the API providers all speak the
  * OpenAI chat-completions format, so one writer (api.ts) covers them.
  * Model ids change often: these are suggestions, and every model field accepts any id.
  */

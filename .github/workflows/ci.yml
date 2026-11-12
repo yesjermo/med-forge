@@ -37,7 +37,7 @@ jobs:
           # Project sites live at https://<user>.github.io/<repo>/
           BASE_PATH: /${{ github.event.repository.name }}/
           VITE_REPO_URL: ${{ github.server_url }}/${{ github.repository }}
-      - run: cp web/index.html site/dist/study-forge.html
+      - run: cp web/index.html site/dist/med-forge.html
       - if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:

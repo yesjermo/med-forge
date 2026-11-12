@@ -44,7 +44,7 @@ export class OllamaWriter implements Writer {
       // which would let every website use this Ollama. (OLLAMA_ORIGINS="null" makes Ollama fail to start.)
       return (
         "This page was opened as a file, and Ollama won't accept requests from file pages. " +
-        "Open the web edition from its GitHub Pages address, or run `npm run preview` and use http://localhost:4173/study-forge/, " +
+        "Open the web edition from its GitHub Pages address, or run `npm run preview` and use http://localhost:4173/med-forge/, " +
         "or switch the writer to an online model (OpenRouter or Gemini, both with free tiers) in Settings."
       );
     }

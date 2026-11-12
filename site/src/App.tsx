@@ -34,7 +34,7 @@ function browserStorage(): Storage | null {
   }
 }
 
-const REPO_URL = import.meta.env.VITE_REPO_URL || "https://github.com/search?q=study-forge&type=repositories";
+const REPO_URL = import.meta.env.VITE_REPO_URL || "https://github.com/search?q=med-forge&type=repositories";
 
 const NAV = [
   { href: "#/", label: "Courses", match: (p: string) => p === "/" || p.startsWith("/c/") },
@@ -67,10 +67,10 @@ export function App() {
     <>
       <header className="nav">
         <div className="nav-inner">
-          <a href="#/" className="brand" aria-label="StudyForge home">
+          <a href="#/" className="brand" aria-label="MedForge home">
             <span className="brand-mark" aria-hidden="true" />
             <span>
-              Study<span className="brand-forge">Forge</span>
+              Med<span className="brand-forge">Forge</span>
             </span>
           </a>
           <nav aria-label="Main">
@@ -92,7 +92,7 @@ export function App() {
         {location.protocol !== "file:" && import.meta.env.PROD && (
           <>
             {" · "}
-            <a href="study-forge.html" download>
+            <a href="med-forge.html" download>
               Offline copy (one file)
             </a>
           </>

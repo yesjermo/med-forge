@@ -196,7 +196,7 @@ export function createNotebook(storage: StorageLike | null) {
         throw new NotebookError("That file isn't valid JSON.");
       }
       if (data?.format !== FORMAT || !Array.isArray(data.posts)) {
-        throw new NotebookError("That file isn't a StudyForge notebook export.");
+        throw new NotebookError("That file isn't a MedForge notebook export.");
       }
       if (!data.posts.every(validPost)) throw new NotebookError("Some posts in that file are damaged, so nothing was imported.");
       const have = new Set(posts.map((p) => p.id));

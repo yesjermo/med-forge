@@ -153,7 +153,7 @@ export function LectureImportPage({ registry, refresh }: { registry?: CourseRegi
       <Notice>
         <p>
           <strong>About Echo360 and other lecture-capture sites:</strong> their pages need your university login, and
-          StudyForge never logs in anywhere. In Echo360, open the recording and download the captions or transcript
+          MedForge never logs in anywhere. In Echo360, open the recording and download the captions or transcript
           (.vtt, .srt or .txt), and the audio or video too if your course allows it. A direct media link works only if
           it plays without signing in.
         </p>

@@ -77,7 +77,7 @@ function startWorker(source: string): Promise<Worker | null> {
 let pdfjsPromise: Promise<PdfJs> | null = null;
 
 function loadPdfJs(): Promise<PdfJs> {
-  if (!PDF_SUPPORTED) return Promise.reject(new Error("PDFs open in the online version of StudyForge. Here, take a screenshot of the page and paste or drop it in."));
+  if (!PDF_SUPPORTED) return Promise.reject(new Error("PDFs open in the online version of MedForge. Here, take a screenshot of the page and paste or drop it in."));
   pdfjsPromise ??= (async () => {
     const [pdfjs, { default: source }] = await Promise.all([
       import("pdfjs-dist/legacy/build/pdf.mjs") as Promise<PdfJs>,

@@ -64,7 +64,7 @@ export function ManageCourses({ registry, refresh }: { registry: CourseRegistry;
                 <span className={`tag source-${source}`}>{SOURCE_LABEL[source]}</span>
               </span>
               <span className="actions">
-                <button type="button" className="secondary small" onClick={() => download(`${course.id}.study-forge-pack.json`, registry.exportJson(course))}>
+                <button type="button" className="secondary small" onClick={() => download(`${course.id}.med-forge-pack.json`, registry.exportJson(course))}>
                   Export pack
                 </button>
                 {source === "imported" && (
