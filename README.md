@@ -254,10 +254,59 @@ Each student adds their own keys in **Settings**. They're saved only in that bro
 
 For the command-line tool, copy `.env.example` to `.env.local` and fill in what you have; `npm run cli -- providers` shows which are active.
 
+## 🏗️ Architecture
+
+StudyForge is a static single-page app: no server and no database. GitHub Pages serves the files, and everything else happens in the student's browser.
+
+```mermaid
+flowchart TB
+    GP["☁️ GitHub Pages<br/>static files only"] --> Shell
+
+    subgraph Browser["🌐 Runs entirely in the student's browser"]
+        Shell["App shell + hash router<br/>site/src/App.tsx"]
+        Shell --> P1["🏥 Course hub<br/>notes · questions · exam"]
+        Shell --> P2["📅 Daily review<br/>✂️ snipper"]
+        Shell --> P3["🧰 Tools<br/>dosage · research · lectures"]
+        Shell --> P4["✍️ Generator<br/>📓 notebook · ⚙️ settings"]
+        P1 & P2 & P3 --> M["📦 Course modules · site/src/med/<br/>courses · SM-2 progress · cards<br/>3D models · scratchpad · lecture player"]
+        P4 & P3 --> E["⚙️ Engine · src/engine/<br/>prompts · format checker<br/>AI writers · paper search"]
+        M --> S[("💾 localStorage<br/>progress · cards · packs · notes · keys")]
+        P4 --> S
+    end
+
+    E -->|"writer"| O["🦙 Ollama<br/>on your computer"]
+    E -->|"writer, your key"| A["🤖 OpenRouter · Gemini · OpenAI"]
+    E -->|"evidence"| C["📚 Crossref · OpenAlex · Perplexity"]
+```
+
+| Layer | Where | What it does |
+|---|---|---|
+| App shell | `site/src/App.tsx`, `router.ts` | Hash routes like `#/c/<course>/questions/<id>`, so the site works on GitHub Pages and from one file |
+| Pages | `site/src/med/pages/`, `site/src/pages/` | Course hub, daily review, snipper, tools, generator, notebook, settings |
+| Course modules | `site/src/med/` | Course data and packs, SM-2 progress, snipped cards, 3D models, scratchpad, lecture player, nursing and research calculators |
+| Engine | `src/engine/` | Block format (prompts, parser, validator), generation pipeline, advisor, AI writers (Ollama, OpenAI-compatible), paper search |
+| Storage | the browser's `localStorage` | Everything a student saves stays on their device; export/import files move it elsewhere |
+| Build | `site/vite.config.ts`, `.github/workflows/ci.yml` | Vite builds the site and the one-file copy; CI tests, then publishes to Pages |
+| CLIs | `src/cli.ts`, `scripts/course.ts` | Generate and lint packs from the terminal; create, check, bundle and pack course folders |
+
 ## 🗺️ Roadmap
 
-- Spaced-repetition review of saved study blocks
-- Anki export and a format eval for the prompts
+```mermaid
+flowchart TB
+    subgraph Now["✅ Shipped"]
+        direction LR
+        N1["Course hub<br/>+ 3D models"] ~~~ N2["SM-2 daily review<br/>+ exam day"] ~~~ N3["Snipper · scratchpad<br/>lecture insights"] ~~~ N4["Health-track generator<br/>Ollama + your key"]
+    end
+    subgraph Next["🔜 Next"]
+        direction LR
+        X1["Snipped cards in IndexedDB<br/>(localStorage caps ~5 MB)"] ~~~ X2["Installable offline app<br/>(PWA)"] ~~~ X3["Spaced review of<br/>saved study blocks"] ~~~ X4["Anki export"]
+    end
+    subgraph Later["🔭 Later"]
+        direction LR
+        L1["Optional sync between<br/>your own devices"] ~~~ L2["Instructor review<br/>mode for content"] ~~~ L3["Accessibility audit"] ~~~ L4["Prompt format eval"]
+    end
+    Now --> Next --> Later
+```
 
 The spaced-repetition and course-space ideas build on [NoobChester/course-noting](https://github.com/NoobChester/course-noting). StudyForge reuses its ideas, not its code.
 
