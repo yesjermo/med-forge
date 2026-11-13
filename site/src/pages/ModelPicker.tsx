@@ -1,9 +1,31 @@
 import { useCallback, useEffect, useId, useState } from "react";
 import { API_PROVIDERS, OLLAMA_MODELS, type ModelChoice } from "@/engine/llm/models";
 import { DEFAULT_OLLAMA_HOST, listOllamaModels, sameModel, type InstalledModel } from "@/engine/llm/ollama";
-import type { WriterChoice } from "../settings";
+import { siteOrigin, type WriterChoice } from "../settings";
 
 const OTHER = "__other__";
+const isLocal = (origin: string) => /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/.test(origin);
+
+/**
+ * Why Ollama can't be reached. A browser can't tell "not running" apart from "running but this
+ * website isn't allowed" (both are a failed request), so on a published site we say both.
+ */
+function OllamaHelp({ host }: { host: string }) {
+  const origin = siteOrigin();
+  if (origin === "null") {
+    return <>This page was opened as a file, and Ollama doesn't accept requests from files. Open MedForge from its website or run <code>npm run dev</code>.</>;
+  }
+  if (isLocal(origin)) {
+    return <>Can't reach Ollama at {host}. Start the Ollama app (or run <code>ollama serve</code>), then check again.</>;
+  }
+  return (
+    <>
+      Can't reach Ollama at {host}. Either it isn't running, or it hasn't allowed this website yet. Start Ollama, then allow this
+      site once and quit and reopen Ollama: <code>launchctl setenv OLLAMA_ORIGINS "{origin}"</code> on macOS, or set{" "}
+      <code>OLLAMA_ORIGINS={origin}</code> on Windows or Linux. Use Chrome, Edge or Firefox (Safari blocks it).
+    </>
+  );
+}
 const gb = (bytes: number) => (bytes ? `${(bytes / 1e9).toFixed(1)} GB` : "cloud");
 
 type Status = { kind: "loading" } | { kind: "ok"; installed: InstalledModel[] } | { kind: "offline"; message: string };
@@ -106,7 +128,7 @@ export function ModelPicker({
           {status.kind === "loading" && "Checking which models Ollama has…"}
           {status.kind === "ok" &&
             (installed.length ? `Ollama is running · ${installed.length} model${installed.length === 1 ? "" : "s"} installed.` : "Ollama is running but has no models yet.")}
-          {status.kind === "offline" && `${status.message} Start Ollama, then check again.`}{" "}
+          {status.kind === "offline" && <OllamaHelp host={ollamaHost || DEFAULT_OLLAMA_HOST} />}{" "}
           {missing && (
             <>
               <strong>{value}</strong> isn't downloaded yet: run <code>ollama pull {value}</code>
