@@ -1,3 +1,4 @@
+import { FromLectures } from "../CourseBar";
 import { useEffect } from "react";
 import { LectureRecording } from "../lecture/LecturePlayer";
 import { Model3D } from "../model3d/Model3D";
@@ -47,6 +48,7 @@ export function ConceptPage({ course, slug }: { course: Course; slug: string }) 
         </p>
         {c.model && <Model3D id={c.model} />}
         <MedText text={c.body} />
+        <FromLectures course={course} slugs={[c.slug]} />
         <div className="pearls">
           <h2>Clinical pearls</h2>
           <ul>

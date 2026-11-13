@@ -13,6 +13,8 @@ import { Terms } from "./med/pages/Terms";
 import { ImportPage } from "./med/pages/Import";
 import { LectureImportPage } from "./med/pages/LectureImport";
 import { BackupPage } from "./pages/Backup";
+import { CourseBar } from "./med/CourseBar";
+import { GuidePage } from "./pages/Guide";
 import { ToolsPage } from "./med/pages/Tools";
 import { ConceptList, ConceptPage, Lectures, NotFound, Revision } from "./med/pages/Notes";
 import { Review } from "./med/pages/DailyReview";
@@ -47,6 +49,7 @@ const NAV = [
     match: (p: string) => ["/tools", "/lab", "/nursing", "/reference", "/terms", "/research", "/generate", "/check", "/courses", "/lecture-import", "/import"].includes(p),
   },
   { href: "#/hub", label: "Notebook", match: (p: string) => p.startsWith("/hub") },
+  { href: "#/guide", label: "Guide", match: (p: string) => p === "/guide" },
   { href: "#/backup", label: "Save / Load", match: (p: string) => p === "/backup" },
   { href: "#/settings", label: "Settings", match: (p: string) => p === "/settings" },
 ];
@@ -65,6 +68,10 @@ export function App() {
   };
 
   const page = pageFor(route, { notebook, progress, registry, refresh, settings, updateSettings });
+  const [first, second, third] = route.segments;
+  const barCourse = first === "c" && second ? registry.find(second) : undefined;
+  // Running from `npm run dev` / `npm run preview` on this computer.
+  const localStudio = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
 
   return (
     <>
@@ -83,7 +90,13 @@ export function App() {
               </a>
             ))}
           </nav>
+          {localStudio && (
+            <span className="local-badge" title="Running on this computer (npm run dev or preview)">
+              Local studio
+            </span>
+          )}
         </div>
+        {barCourse && <CourseBar course={barCourse} courses={registry.all().map((x) => x.course)} progress={progress} section={third} />}
       </header>
       {page}
       <footer className="foot">
@@ -123,6 +136,7 @@ function pageFor(
   if (route.path === "/") return <Courses progress={progress} courses={courses} />;
   if (route.path === "/review" || route.path === "/daily-review") return <Review progress={progress} refresh={refresh} courses={courses} />;
   if (route.path === "/tools") return <ToolsPage />;
+  if (route.path === "/guide") return <GuidePage />;
   if (route.path === "/lab") return <LabTools />;
   if (route.path === "/nursing") return <Nursing />;
   if (route.path === "/reference") return <Reference />;

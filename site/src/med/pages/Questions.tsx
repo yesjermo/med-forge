@@ -1,3 +1,4 @@
+import { FromLectures } from "../CourseBar";
 import { useState } from "react";
 import { Icon } from "@/components/Icon";
 import { checkNumber } from "../labmath";
@@ -232,6 +233,7 @@ export function QuestionView({
                       : `Not quite. The answer is ${String.fromCharCode(65 + question.answer)}.`}
                 </p>
                 <MedText text={question.explanation} />
+                <FromLectures course={course} slugs={question.concepts} />
                 <p className="related">
                   Concepts:{" "}
                   {question.concepts.map((s, i) => {
