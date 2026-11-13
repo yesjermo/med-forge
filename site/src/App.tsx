@@ -15,7 +15,8 @@ import { LectureImportPage } from "./med/pages/LectureImport";
 import { BackupPage } from "./pages/Backup";
 import { ToolsPage } from "./med/pages/Tools";
 import { ConceptList, ConceptPage, Lectures, NotFound, Revision } from "./med/pages/Notes";
-import { Exam, Review } from "./med/pages/Practice";
+import { Review } from "./med/pages/DailyReview";
+import { Exam } from "./med/pages/Practice";
 import { QuestionList, QuestionPage } from "./med/pages/Questions";
 import { createProgress } from "./med/progress";
 import { createNotebook } from "./notebook";
@@ -156,7 +157,7 @@ function pageFor(
         return <Lectures course={course} focus={route.query.get("l")} />;
       case "questions":
         return fourth ? (
-          <QuestionPage {...shared} id={fourth} />
+          <QuestionPage {...shared} id={fourth} topic={route.query.get("topic")} />
         ) : (
           <QuestionList course={course} progress={progress} topic={route.query.get("topic")} status={route.query.get("status")} />
         );
