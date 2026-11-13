@@ -1,0 +1,125 @@
+import { useCallback, useEffect, useId, useState } from "react";
+import { API_PROVIDERS, OLLAMA_MODELS, type ModelChoice } from "@/engine/llm/models";
+import { DEFAULT_OLLAMA_HOST, listOllamaModels, sameModel, type InstalledModel } from "@/engine/llm/ollama";
+import type { WriterChoice } from "../settings";
+
+const OTHER = "__other__";
+const gb = (bytes: number) => (bytes ? `${(bytes / 1e9).toFixed(1)} GB` : "cloud");
+
+type Status = { kind: "loading" } | { kind: "ok"; installed: InstalledModel[] } | { kind: "offline"; message: string };
+
+/** Ask Ollama which models are installed; refresh() asks again (e.g. after `ollama pull`). */
+export function useOllamaModels(host: string, enabled = true) {
+  const [status, setStatus] = useState<Status>({ kind: "loading" });
+  const refresh = useCallback(() => {
+    if (!enabled) return;
+    setStatus({ kind: "loading" });
+    listOllamaModels(host || DEFAULT_OLLAMA_HOST).then(
+      (installed) => setStatus({ kind: "ok", installed }),
+      (e: unknown) => setStatus({ kind: "offline", message: e instanceof Error ? e.message : String(e) }),
+    );
+  }, [host, enabled]);
+  useEffect(refresh, [refresh]);
+  return { status, refresh };
+}
+
+/**
+ * Choose the writer's model from a list instead of typing it. For Ollama it lists the models
+ * installed on this computer first, then free ones to download; "Other…" takes any model id.
+ */
+export function ModelPicker({
+  writer,
+  value,
+  onChange,
+  ollamaHost,
+  label = "Model",
+}: {
+  writer: WriterChoice;
+  value: string;
+  onChange: (model: string) => void;
+  ollamaHost: string;
+  label?: string;
+}) {
+  const id = useId();
+  const isOllama = writer === "ollama";
+  const { status, refresh } = useOllamaModels(ollamaHost, isOllama);
+  const suggestions: readonly ModelChoice[] = isOllama ? OLLAMA_MODELS : writer === "custom" ? [] : API_PROVIDERS[writer].models;
+  const installed = isOllama && status.kind === "ok" ? status.installed : [];
+  const toDownload = suggestions.filter((m) => !installed.some((i) => sameModel(i.name, m.id)));
+  const known = [...installed.map((m) => m.name), ...suggestions.map((m) => m.id)];
+  const match = known.find((k) => sameModel(k, value));
+  const [typing, setTyping] = useState(() => Boolean(value) && !match && writer !== "custom");
+  const showOther = writer === "custom" || typing || (Boolean(value) && !match);
+  const selected = showOther ? OTHER : (match ?? "");
+  const missing = isOllama && status.kind === "ok" && value && !installed.some((i) => sameModel(i.name, value));
+
+  return (
+    <div className="field model-picker">
+      <label htmlFor={id}>{label}</label>
+      {writer !== "custom" && (
+        <select
+          id={id}
+          value={selected}
+          onChange={(e) => {
+            if (e.target.value === OTHER) {
+              setTyping(true);
+              return;
+            }
+            setTyping(false);
+            onChange(e.target.value);
+          }}
+        >
+          {!selected && <option value="">Choose a model…</option>}
+          {installed.length > 0 && (
+            <optgroup label="Installed on this computer">
+              {installed.map((m) => (
+                <option key={m.name} value={m.name}>
+                  {m.name.replace(/:latest$/, "")} · {gb(m.size)}
+                </option>
+              ))}
+            </optgroup>
+          )}
+          {toDownload.length > 0 && (
+            <optgroup label={isOllama ? "Free to download" : "Suggested"}>
+              {toDownload.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.id} · {m.note}
+                </option>
+              ))}
+            </optgroup>
+          )}
+          <option value={OTHER}>Other model id…</option>
+        </select>
+      )}
+      {showOther && (
+        <input
+          aria-label={`${label} id`}
+          value={value}
+          onChange={(e) => onChange(e.target.value.trim())}
+          placeholder={isOllama ? "e.g. llama3.2 or mistral" : "model id"}
+          spellCheck={false}
+          autoFocus={typing}
+        />
+      )}
+      {isOllama && (
+        <small className="hint" role="status">
+          {status.kind === "loading" && "Checking which models Ollama has…"}
+          {status.kind === "ok" &&
+            (installed.length ? `Ollama is running · ${installed.length} model${installed.length === 1 ? "" : "s"} installed.` : "Ollama is running but has no models yet.")}
+          {status.kind === "offline" && `${status.message} Start Ollama, then check again.`}{" "}
+          {missing && (
+            <>
+              <strong>{value}</strong> isn't downloaded yet: run <code>ollama pull {value}</code>
+              {/-cloud$/.test(value) ? " after ollama signin" : ""}, then check again.{" "}
+            </>
+          )}
+          {status.kind !== "loading" && (
+            <button type="button" className="link-button" onClick={refresh}>
+              Check again
+            </button>
+          )}
+        </small>
+      )}
+    </div>
+  );
+}

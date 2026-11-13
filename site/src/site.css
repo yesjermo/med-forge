@@ -26,3 +26,9 @@
 input[type="radio"] { width: 16px; height: 16px; padding: 0; accent-color: var(--primary); }
 .legend { font-weight: 650; font-size: 0.88rem; padding: 0; margin-bottom: 8px; }
 fieldset.keys-group { border: 0; padding: 0; margin: 0 0 8px; }
+
+/* Model picker: a list of installed / downloadable models, plus "Other…" for any id. */
+.model-picker select, .model-picker input { width: 100%; }
+.model-picker input { margin-top: 6px; }
+.link-button { background: none; border: 0; padding: 0; color: var(--primary-text); text-decoration: underline; font: inherit; cursor: pointer; min-height: 0; box-shadow: none; }
+.link-button:hover { color: var(--primary); background: none; }

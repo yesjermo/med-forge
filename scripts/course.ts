@@ -6,6 +6,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { courseToFiles, parseCourseFiles, wrapPack } from "../site/src/med/coursefiles";
 import { COURSES } from "../site/src/med/courses";
+import { createWriter } from "../src/engine/llm/select";
+import { buildLecture, checkOptions, parseLectureArgs, readCourseInfo, writeLecture } from "./course-lecture";
 import type { Course } from "../site/src/med/types";
 
 const cwd = process.cwd();
@@ -22,6 +24,14 @@ Usage: npx tsx scripts/course.ts <command>   (or npm run course:<command> -- ...
   pack <CODE> [out.json]        Write one shareable pack file (default ./<id>.med-forge-pack.json)
                                 to import in the app under Tools > Add or import a course
   check                         Validate every course folder without writing anything
+  lecture <CODE> <captions>     Add lectures/<id>.md from a captions file you downloaded yourself
+                                (.vtt, .srt or .txt from Echo360, Panopto, Kaltura…). Options:
+                                  --title "Week 3: …"   --topic "<a course.json topic>"
+                                  --week 3              --audio <https link to the recording>
+                                  --id <lecture id>     --no-ai (notes and chapters only)
+                                  --writer ollama|openrouter|gemini|openai   --model <id>
+                                With AI (default: free local Ollama) it adds exam tips, clinical
+                                links and chapters. It never logs in to or downloads from Echo360.
   help                          Show this help
 
 Course folders stay on your computer: courses/ is git-ignored. Don't put university-owned
@@ -29,6 +39,7 @@ materials (slides, exam papers) in a pack you share unless you're allowed to.
 
 Example:
   npm run course:new -- BIOL113 "Human Anatomy"
+  npm run course:lecture -- BIOL113 ~/Downloads/week3.vtt --title "Week 3: Joints"
   npm run course:bundle`;
 
 const fail = (msg: string, code = 1): never => {
@@ -275,6 +286,18 @@ file-name order; add \`order: 1\`, \`order: 2\`… to any item to choose the ord
 Every topic must be listed in course.json. Start ids with "${id.replace(/-/g, "")}-" so
 they never clash with other courses (progress is saved by question id).
 
+## Lectures from Echo360 (or Panopto, Kaltura…) captions
+
+Download the captions or transcript yourself from the lecture page (.vtt, .srt or .txt;
+MedForge never logs in to Echo360), then run:
+
+    npm run course:lecture -- ${code} ~/Downloads/captions.vtt --title "Week 3: …"
+
+It writes \`lectures/<id>.md\` with timestamped notes, chapters and AI insights (free local
+Ollama by default; \`--writer openrouter|gemini|openai\` uses your key, \`--no-ai\` skips AI).
+Add \`--audio <https link>\` if you have a direct link to the recording, \`--topic\` and
+\`--week\` to file it. Edit the notes in your own words before sharing a pack.
+
 Rules checked by \`npm run course:check\`: at least 4 concepts, 6 questions, 2 lectures, a
 lab, a clinical case (4+ stages, its setting must say "Educational simulation", no drug
 doses) and a skill checklist (5+ items); every concept needs a pearl, every question a hint.
@@ -323,6 +346,68 @@ function cmdCheck() {
   console.log(`\nAll ${loaded.length} course folder${loaded.length === 1 ? "" : "s"} OK.`);
 }
 
+async function cmdLecture(argv: string[]) {
+  const usage = `Usage: npm run course:lecture -- <CODE> <captions.vtt|.srt|.txt> [--title "…"] [--topic "…"] [--week N] [--audio <https url>] [--id <id>] [--no-ai] [--writer ollama|openrouter|gemini|openai] [--model <id>]`;
+  const { args, errors } = parseLectureArgs(argv);
+  if (errors.length) fail(`${errors.join("\n")}\n${usage}`, 2);
+  if (!args.code || !args.file) fail(usage, 2);
+  const dir = path.join(COURSES_DIR, args.code!);
+  if (!fs.existsSync(path.join(dir, "course.json"))) {
+    fail(`No course folder courses/${args.code}/ with a course.json in ${cwd}.\nCreate it first with:\n  npm run course:new -- ${args.code} "<Course title>"`);
+  }
+  const file = path.resolve(cwd, args.file!);
+  if (!fs.existsSync(file) || !fs.statSync(file).isFile()) fail(`Can't find the captions file ${args.file}.`);
+
+  let course;
+  try {
+    course = readCourseInfo(dir, args.code!);
+  } catch (e) {
+    fail(`courses/${args.code}/course.json can't be read: ${(e as Error).message}`);
+  }
+  const bad = checkOptions(course!, args);
+  if (bad.length) fail(bad.join("\n"));
+
+  let writer = null;
+  if (args.ai) {
+    try {
+      writer = createWriter(args.writer, process.env, args.model);
+    } catch (e) {
+      fail(`${(e as Error).message}\nOr run with --no-ai to write the lecture with notes and chapters only.`);
+    }
+    console.error(`Finding insights with ${writer!.name} (${writer!.model})…`);
+  }
+  const tty = process.stderr.isTTY;
+  let lastPart = 0;
+  const onProgress = (p: { part: number; parts: number; chars: number }) => {
+    if (tty) process.stderr.write(`\r  part ${p.part}/${p.parts}: ${p.chars} characters received   `);
+    else if (p.part !== lastPart) console.error(`  part ${p.part}/${p.parts}…`);
+    lastPart = p.part;
+  };
+
+  let result;
+  try {
+    result = await buildLecture(fs.readFileSync(file, "utf8"), path.basename(file), course!, args, writer, onProgress);
+  } catch (e) {
+    if (tty && writer) process.stderr.write("\n");
+    const msg = (e as Error).message;
+    fail(writer ? `The writer failed: ${msg}\nFix that, pick another with --writer, or run with --no-ai for notes and chapters only.` : msg);
+  }
+  if (tty && writer) process.stderr.write("\n");
+  for (const p of result!.problems) console.error(`  note: ${p}`);
+
+  const { lecture } = result!;
+  let out = "";
+  try {
+    out = writeLecture(dir, lecture);
+  } catch (e) {
+    fail((e as Error).message);
+  }
+  console.log(`✓ ${path.relative(cwd, out)}  week ${lecture.week} · ${lecture.topic} · ${lecture.chapters?.length ?? 0} chapters, ${lecture.insights.length} insights${writer ? "" : " (no AI)"}
+Read it through and put the notes in your own words, then run:
+  npm run course:check     # find problems
+  npm run course:bundle    # add it to the web app`);
+}
+
 const [command, ...args] = process.argv.slice(2);
 switch (command) {
   case "new":
@@ -336,6 +421,9 @@ switch (command) {
     break;
   case "check":
     cmdCheck();
+    break;
+  case "lecture":
+    await cmdLecture(args);
     break;
   case undefined:
   case "help":

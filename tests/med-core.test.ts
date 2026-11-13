@@ -168,3 +168,13 @@ describe("review ahead", () => {
     expect(lastReviewedAt(second)).toBe(t + 86_400_000);
   });
 });
+
+describe("course text markup", () => {
+  it("renders **bold**, also around inline math, and keeps HTML escaped", async () => {
+    const { renderInline } = await import("../src/components/markup");
+    expect(renderInline("**Gram-positive**: thick wall")).toBe("<strong>Gram-positive</strong>: thick wall");
+    expect(renderInline("a **$x$** b")).toMatch(/^a <strong><span class="katex">[\s\S]*<\/strong> b$/);
+    expect(renderInline("2 ** 3")).toBe("2 ** 3");
+    expect(renderInline("<b>**x**</b>")).toBe("&lt;b&gt;<strong>x</strong>&lt;/b&gt;");
+  });
+});

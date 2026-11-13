@@ -26,6 +26,65 @@
 
 A study site for **medical-science undergraduates** (pre-med, biomedical science, nursing pathways) at USF and other colleges: course notes, a question bank with spaced review, **lab practice** and **clinical practice**, all running in your browser. Inspired by the method of [NoobChester/course-noting](https://github.com/NoobChester/course-noting); all content is original. Not affiliated with or endorsed by any university or institution.
 
+## ⚡ Quickstart (on your own computer)
+
+Run MedForge locally and add your university courses privately. You need [Node.js](https://nodejs.org) 22.13+ and, for the free AI writer, [Ollama](https://ollama.com).
+
+**1. Clone and install**
+
+```bash
+git clone https://github.com/yesjermo/med-forge.git
+cd med-forge
+npm install
+```
+
+**2. Start it**
+
+```bash
+npm run dev
+```
+
+Open http://localhost:5173/med-forge/. Pick a free AI model in **Settings** (or straight on the generator page): MedForge lists the models installed in Ollama and the free ones you can download, e.g. `ollama pull qwen3`.
+
+**3. Add your own course** (kept off GitHub: `courses/` is git-ignored)
+
+```bash
+npm run course:new -- BIOL105 "Molecules of Life"
+```
+
+```
+courses/BIOL105/
+├── course.json     # code, title, topics
+├── concepts/       # theory notes (.md with KaTeX, optional 3D model)
+├── questions/      # question cards (.md with prompt, answer, hints)
+├── lectures/       # lecture notes (.md with insights, chapters, audio link)
+├── labs/ cases/ skills/   # practice (.yaml)
+└── README.md       # the format, in full
+```
+
+**4. Turn lecture captions into notes** (Echo360, Panopto, Kaltura: download the captions yourself; MedForge never logs in)
+
+```bash
+npm run course:lecture -- BIOL105 week3.vtt --title "Week 3: Enzymes"
+```
+
+**5. Check and bundle your courses into the app**
+
+```bash
+npm run course:check && npm run course:bundle
+```
+
+### 💾 Save, load and move between devices
+
+Your progress lives in your browser. **Save / Load** in the top bar:
+
+1. **Copy save string**: one compressed line with your progress, answers, SM-2 schedules, notebook, imported packs, exam date and scratchpads. Paste it on another device to carry on.
+2. **Download backup file** (`med-forge-backup-<date>.json`), optionally with your snipped cards.
+3. **Load**: paste a string or upload a file, see what's in it, then merge it with what's there or replace it.
+4. **Clean slate for sharing**: clears your answers and progress but keeps the courses and imported packs, so you can hand the browser or your course packs to a friend.
+
+Settings and API keys are never included in a save string or backup file.
+
 ## 🧭 Workflow map
 
 How the pieces fit into a study week. Everything runs in your browser; the only things that leave it are the AI requests you choose to make (to Ollama on your own computer, or to a provider you add a key for) and paper searches.
@@ -80,7 +139,7 @@ flowchart LR
 
 <img src=".github/media/model3d.gif" alt="An interactive 3D DNA double helix turning on a concept page" width="320" align="right">
 
-Three sample courses: **Human Anatomy & Physiology**, **Microbiology** and **Biochemistry**. Each has:
+Eight courses: three general ones (**Human Anatomy & Physiology**, **Microbiology**, **Biochemistry**) and five aligned with University of San Francisco courses: **BIOL 105 Molecules of Life**, **BIOL 106 Diversity of Life**, **CHEM 111 General Chemistry I**, **NURS 220 Applied Pathophysiology & Pharmacology I** and **NURS 222 Applied Assessment & Nursing Fundamentals**. The USF course codes and titles come from USF's own advising pages; the content is original and covers topics typical for each course, so check it against your syllabus. MedForge isn't affiliated with or endorsed by USF. Each course has:
 
 - **Concepts:** key ideas with formulas and clinical pearls, many with an interactive **3D model** (DNA, α-helix, haemoglobin, an enzyme–substrate complex, glucose, a sarcomere, a bacterium, a cell membrane and more) that you can drag or turn with the arrow keys
 - **Lectures:** notes with exam tips, clinical links and intuitions
@@ -102,6 +161,7 @@ Like course-noting, each course is a folder of plain files you can write in any 
 
 ```bash
 npm run course:new -- BIOL113 "Human Anatomy"   # make courses/BIOL113/ with starter files
+npm run course:lecture -- BIOL113 week3.vtt     # lecture notes + AI insights from captions you downloaded
 npm run course:check                            # find problems, with the file name
 npm run course:bundle                           # add every course in courses/ to the web app
 npm run course:pack -- BIOL113                  # one file to send to a classmate
@@ -114,6 +174,8 @@ flowchart LR
 ```
 
 A course folder has `course.json` plus `concepts/*.md` (add `model: dna`, `bilayer`, `virus`… to show a 3D model), `lectures/*.md`, `questions/*.md` (markdown with YAML front matter) and `labs/`, `cases/`, `skills/*.yaml`. Copy `courses.example/MEDS101` to see a complete one. In the app, **Tools > Add or import a course** imports a classmate's pack, and exports or removes the ones you've added. Imported courses live in your browser only.
+
+For Echo360 (or Panopto, Kaltura) lectures, download the captions yourself from the lecture page, then `npm run course:lecture -- BIOL113 captions.vtt --title "Week 3: Joints"` writes `lectures/<id>.md` with timestamped notes, chapters and exam tips (free local Ollama by default, `--no-ai` for notes only, `--audio <https link>` if you have a direct link to the recording). MedForge never logs in to Echo360.
 
 ### 🧰 Tools for medical, nursing and research students
 

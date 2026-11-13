@@ -18,12 +18,16 @@ function math(tex: string, displayMode: boolean): string {
 
 const INLINE_MATH_RE = /\$([^$\n]+?)\$/g;
 
-/** Escape plain text and turn `[S3]` source tags into links to the evidence list. */
+const BOLD = "\u0001";
+
+/** Escape plain text, mark `**` for bold, and turn `[S3]` source tags into links to the evidence list. */
 function textHtml(s: string): string {
-  return escapeHtml(s).replace(/\[(S\d{1,3})\]/g, '<a class="src-tag" href="#src-$1">[$1]</a>');
+  return escapeHtml(s)
+    .replace(/\*\*/g, BOLD)
+    .replace(/\[(S\d{1,3})\]/g, '<a class="src-tag" href="#src-$1">[$1]</a>');
 }
 
-/** Escape text and render `$...$` inline math and `[S#]` source links. */
+/** Escape text and render `$...$` inline math, `**bold**` and `[S#]` source links. */
 export function renderInline(text: string): string {
   let out = "";
   let last = 0;
@@ -32,7 +36,9 @@ export function renderInline(text: string): string {
     out += math(m[1]!, false);
     last = m.index! + m[0].length;
   }
-  return out + textHtml(text.slice(last));
+  out += textHtml(text.slice(last));
+  // Pair the markers (bold may wrap inline math); an unpaired one goes back to literal "**".
+  return out.replace(new RegExp(`${BOLD}([\\s\\S]+?)${BOLD}`, "g"), "<strong>$1</strong>").replaceAll(BOLD, "**");
 }
 
 /**
