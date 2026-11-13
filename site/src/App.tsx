@@ -42,6 +42,7 @@ const REPO_URL = import.meta.env.VITE_REPO_URL || "https://github.com/search?q=m
 
 const NAV = [
   { href: "#/", label: "Courses", match: (p: string) => p === "/" || p.startsWith("/c/") },
+  { href: "#/guide", label: "Guide", match: (p: string) => p === "/guide" },
   { href: "#/daily-review", label: "Daily review", match: (p: string) => p === "/review" || p === "/daily-review" },
   {
     href: "#/tools",
@@ -49,7 +50,6 @@ const NAV = [
     match: (p: string) => ["/tools", "/lab", "/nursing", "/reference", "/terms", "/research", "/generate", "/check", "/courses", "/lecture-import", "/import"].includes(p),
   },
   { href: "#/hub", label: "Notebook", match: (p: string) => p.startsWith("/hub") },
-  { href: "#/guide", label: "Guide", match: (p: string) => p === "/guide" },
   { href: "#/backup", label: "Save / Load", match: (p: string) => p === "/backup" },
   { href: "#/settings", label: "Settings", match: (p: string) => p === "/settings" },
 ];
