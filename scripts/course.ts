@@ -16,13 +16,16 @@ loadLocalEnv();
 const cwd = process.cwd();
 const COURSES_DIR = path.resolve(cwd, "courses");
 const LOCAL_DIR = path.resolve(cwd, "site", "src", "med", "local");
+/** Committed: courses here are built into the deployed website for everyone. */
+const PUBLISHED_DIR = path.resolve(cwd, "site", "src", "med", "published");
 
 const USAGE = `MedForge course folders
 
 Usage: npx tsx scripts/course.ts <command>   (or npm run course:<command> -- ...)
 
   new <CODE> "<Course title>"   Create courses/<CODE>/ with example files to replace
-  bundle [CODE]                 Validate course folders and write site/src/med/local/<id>.json
+  bundle [CODE] [--publish]     Validate course folders and write site/src/med/local/<id>.json
+                                (--publish: site/src/med/published/, committed, so it's on the website)
                                 (the web app picks these up on the next dev/build)
   pack <CODE> [out.json]        Write one shareable pack file (default ./<id>.med-forge-pack.json)
                                 to import in the app under Tools > Add or import a course
@@ -323,15 +326,22 @@ Replace the example files with your own notes, then run:
 This folder is git-ignored: it stays on your computer.`);
 }
 
-function cmdBundle(only?: string) {
+function cmdBundle(args: string[]) {
+  const publish = args.includes("--publish");
+  const only = args.find((a) => !a.startsWith("--"));
   const loaded = loadCourses(only);
-  fs.mkdirSync(LOCAL_DIR, { recursive: true });
+  const dir = publish ? PUBLISHED_DIR : LOCAL_DIR;
+  fs.mkdirSync(dir, { recursive: true });
   for (const { folder, course } of loaded) {
-    const out = path.join(LOCAL_DIR, `${course.id}.json`);
+    const out = path.join(dir, `${course.id}.json`);
     fs.writeFileSync(out, JSON.stringify(course, null, 2) + "\n");
     console.log(`✓ courses/${folder}/ → ${path.relative(cwd, out)}  ${summary(course)}`);
   }
   console.log(`\nBundled ${loaded.length} course${loaded.length === 1 ? "" : "s"}. Restart or reload the dev server to see ${loaded.length === 1 ? "it" : "them"}.`);
+  if (publish) {
+    console.log(`These files are committed: push them and GitHub Pages puts ${loaded.length === 1 ? "the course" : "the courses"} on the website for everyone.
+Only publish material you wrote yourself or are allowed to share (no university slides, papers or recordings).`);
+  }
 }
 
 function cmdPack(code?: string, outArg?: string) {
@@ -417,7 +427,7 @@ switch (command) {
     cmdNew(args[0], args[1]);
     break;
   case "bundle":
-    cmdBundle(args[0]);
+    cmdBundle(args);
     break;
   case "pack":
     cmdPack(args[0], args[1]);
