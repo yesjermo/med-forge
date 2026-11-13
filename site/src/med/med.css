@@ -194,7 +194,7 @@ a.button.secondary-link:hover { background: var(--primary-soft); border-color: v
 .course-bar-inner { max-width: 1200px; margin: 0 auto; padding: 6px 16px; display: flex; align-items: center; gap: 14px; min-height: 50px; }
 .course-switch { position: relative; flex: none; }
 .course-switch-btn { display: inline-flex; align-items: center; gap: 8px; max-width: 280px; padding: 6px 10px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); color: var(--text); font: inherit; cursor: pointer; min-height: 0; box-shadow: none; }
-.course-switch-btn:hover { border-color: var(--primary); background: var(--surface); }
+.course-switch-btn:hover:not(:disabled), .course-switch-btn[aria-expanded="true"] { border-color: var(--primary); background: var(--surface); }
 .course-switch-code { font-weight: 800; font-size: 0.88rem; white-space: nowrap; color: var(--primary-text); }
 .course-switch-title { font-size: 0.85rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .course-menu { position: absolute; top: calc(100% + 6px); left: 0; z-index: 20; width: min(340px, calc(100vw - 32px)); max-height: 70vh; overflow-y: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 8px; box-shadow: 0 12px 32px oklch(0% 0 0 / 0.18); }
@@ -219,6 +219,8 @@ a.button.secondary-link:hover { background: var(--primary-soft); border-color: v
 .mastered-pill strong { color: var(--ok); }
 .insights-toggle { padding: 6px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 600; background: var(--surface); color: var(--muted); border: 1px solid var(--border); min-height: 0; box-shadow: none; white-space: nowrap; }
 .insights-toggle.on { color: var(--secondary-text); border-color: color-mix(in oklch, var(--secondary) 60%, transparent); background: var(--secondary-soft); }
+.insights-toggle:hover:not(:disabled) { background: var(--surface-2); color: var(--text); border-color: var(--primary); }
+.insights-toggle.on:hover:not(:disabled) { background: var(--secondary-soft); color: var(--secondary-text); border-color: var(--secondary); }
 .practice-btn { white-space: nowrap; }
 @media (max-width: 1180px) {
   .course-bar-inner { flex-wrap: wrap; gap: 8px; }

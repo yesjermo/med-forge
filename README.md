@@ -20,7 +20,7 @@
 
 **[Open MedForge →](https://yesjermo.github.io/med-forge/)**
 
-<img src=".github/media/tour.gif" alt="A tour of MedForge: the course list, a course dashboard, a concept with a rotating 3D alpha-helix, a graded practice question, an ECG sketched on the question's scratchpad, the daily review with an exam-day countdown, and the study tools" width="800">
+<img src=".github/media/tour.gif" alt="A tour of MedForge: the course list, a course dashboard with the course bar, the course switcher, a concept page with notes from the lectures, a graded practice question, the daily review, and the Guide &amp; tutorial page" width="800">
 
 </div>
 
