@@ -9,6 +9,9 @@ import { COURSES } from "../site/src/med/courses";
 import { createWriter } from "../src/engine/llm/select";
 import { buildLecture, checkOptions, parseLectureArgs, readCourseInfo, writeLecture } from "./course-lecture";
 import type { Course } from "../site/src/med/types";
+import { loadLocalEnv } from "../src/engine/env";
+
+loadLocalEnv();
 
 const cwd = process.cwd();
 const COURSES_DIR = path.resolve(cwd, "courses");
