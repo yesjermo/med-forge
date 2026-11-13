@@ -11,7 +11,7 @@ site/dist-single/
 web/
 
 # Private university courses (like course-noting): kept on your computer only
-courses/
+/courses/
 site/src/med/local/*.json
 *.med-forge-pack.json
 *.study-forge-pack.json

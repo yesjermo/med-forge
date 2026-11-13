@@ -6,7 +6,7 @@
 export interface Course {
   /** URL slug, e.g. "anatomy-physiology". */
   id: string;
-  /** Short code shown on cards, e.g. "A&P". Not a real university course number. */
+  /** Short code shown on cards, e.g. "A&P", or a real course number such as "BIOL 105" for a course aligned with a university syllabus. */
   code: string;
   title: string;
   description: string;
