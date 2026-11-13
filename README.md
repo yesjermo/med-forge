@@ -157,7 +157,7 @@ Eight courses: three general ones (**Human Anatomy & Physiology**, **Microbiolog
 
 ### 🏫 Add your own university course
 
-Like course-noting, each course is a folder of plain files you can write in any editor. `courses/` is git-ignored, so your notes stay on your computer.
+Like [course-noting](https://github.com/NoobChester/course-noting), each course is a folder of plain files you can write in any editor. `courses/` is git-ignored, so your notes stay on your computer.
 
 ```bash
 npm run course:new -- BIOL113 "Human Anatomy"   # make courses/BIOL113/ with starter files
@@ -370,7 +370,44 @@ flowchart TB
     Now --> Next --> Later
 ```
 
-The spaced-repetition and course-space ideas build on [NoobChester/course-noting](https://github.com/NoobChester/course-noting). MedForge reuses its ideas, not its code.
+
+## 📚 References and sources
+
+### Inspired by course-noting
+
+MedForge's study-hub design follows [**NoobChester/course-noting**](https://github.com/NoobChester/course-noting) ([live demo](https://noobchester.github.io/course-noting/)), a privacy-first study hub and proof engine for maths, physics and computer science students. course-noting has no open-source licence, so MedForge doesn't copy its code, text or course content: everything here was written separately, and only the ideas are shared. The table shows where each idea lives in MedForge and how it differs.
+
+| course-noting | MedForge | Difference |
+|---|---|---|
+| Three layers kept apart: base curriculum pack, lecture-insights pack, user progress | Course packs (`site/src/med/courses/`, `courses/<CODE>/`), lectures with timed insights, progress in the browser | Same separation; medical, nursing, pre-med and pre-vet content |
+| `courses/<CODE>/` folders, git-ignored, with `course.json`, concepts, questions, lectures | The same folder idea, plus `labs/`, `cases/`, `skills/` | `npm run course:new / check / bundle / pack` (TypeScript) instead of Python scripts |
+| `bundle_packs.py` static JSON packs | `npm run course:bundle` and shareable `.med-forge-pack.json` files | Packs can also be imported in the app (**Tools › Add or import a course**) |
+| Echo360 helper that fetches transcripts | `npm run course:lecture` and **Tools › Lecture recording to insights** | Works from captions you download yourself; MedForge never logs in to Echo360 |
+| Lecture insights (spoken intuitions, exam tips) with a range-request audio player | Lecture player with chapters and timed insights (`exam_tip`, `clinical_link`, `intuition`) | Insights are cited by transcript line, so small local models place them at the right second |
+| SM-2 daily review, 0 (Blankout) to 5 (Mastered) | `#/daily-review` with the same 0–5 scale | Adds an exam-day countdown and "review ahead" |
+| PDF question snipper (`/import`) | `#/import` for PDFs and screenshots | Snipped cards join the daily review; the one-file build takes screenshots only |
+| Scratchpad canvas on every question | Scratchpad tab on every question | Same idea |
+| AI proof reviewer (Gemini, Claude, GPT, local Ollama) | **Advise me** on study blocks and notebook posts | Ollama is the free default; online models through OpenRouter, Gemini or OpenAI with your own key |
+| Split LaTeX editor | Notebook posts and study blocks with `$…$` / `$$…$$` KaTeX | No live split-pane editor yet |
+| Save / Load string, backup file, clean slate | **Save / Load** with the same three | Settings and API keys are never included |
+| GitHub Pages deploy | GitHub Pages deploy plus a one-file offline copy | |
+
+### Course codes and titles
+
+The five USF-aligned courses take their codes and titles from the University of San Francisco's own pages. Their content is original and covers topics typical for each course; it isn't taken from USF materials, and MedForge isn't affiliated with or endorsed by USF.
+
+- [USF advising page for first-year science courses](https://myusf.usfca.edu/node/64929): BIOL 105 Molecules of Life, BIOL 106 Diversity of Life, CHEM 111 General Chemistry I
+- [USF BSN curriculum pattern (September 2025)](https://myusf.usfca.edu/sites/default/files/documents/webtrack/BSN%20Curric%20Pattern_Updated%20to%20120_Spring%20entry%20TR%20pattern_9.2025.pdf): NURS 220 Applied Pathophysiology & Pharmacology I, NURS 222 Applied Assessment & Nursing Fundamentals
+
+Clinical figures in the courses (reference ranges, vital-sign norms, risk-scale bands) follow mainstream textbook values and vary between labs, agencies and programmes: use your own course's references for exams and placements.
+
+### Methods, services and libraries
+
+- **Spaced repetition:** the SuperMemo-2 algorithm, [described by its author, Piotr Woźniak](https://www.super-memory.com/english/ol/sm2.htm)
+- **Paper search:** [Crossref REST API](https://www.crossref.org/documentation/retrieve-metadata/rest-api/), [OpenAlex](https://openalex.org), [Perplexity](https://docs.perplexity.ai), and PubMed search links ([PubMed](https://pubmed.ncbi.nlm.nih.gov))
+- **AI writers:** [Ollama](https://ollama.com) (free and local), [OpenRouter](https://openrouter.ai), [Google Gemini API](https://ai.google.dev), [OpenAI API](https://developers.openai.com)
+- **Rendering and files:** [KaTeX](https://katex.org) for maths, [pdf.js](https://mozilla.github.io/pdf.js/) for the question snipper
+- **Built with:** [React](https://react.dev), [Vite](https://vite.dev), [TypeScript](https://www.typescriptlang.org), [Vitest](https://vitest.dev)
 
 ## 📁 What's in the repo
 
