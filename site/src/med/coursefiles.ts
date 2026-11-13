@@ -88,7 +88,14 @@ class FileReader {
     return v.map((x, i) => {
       if (typeof x === "string") return x;
       if (typeof x === "number" || typeof x === "boolean") return String(x);
-      this.err(`${key}[${i}] must be text`);
+      // "- Clinical link: acidosis causes arrhythmias" is read by YAML as a one-key map
+      // because of the colon; treat it as the sentence it was meant to be.
+      if (x && typeof x === "object" && !Array.isArray(x)) {
+        const entries = Object.entries(x as Record<string, unknown>);
+        const [k, val] = entries[0] ?? [];
+        if (entries.length === 1 && (typeof val === "string" || typeof val === "number")) return `${k}: ${val}`;
+      }
+      this.err(`${key}[${i}] must be text (put it in "double quotes" if it contains a colon)`);
       return "";
     });
   }

@@ -85,6 +85,154 @@ Your progress lives in your browser. **Save / Load** in the top bar:
 
 Settings and API keys are never included in a save string or backup file.
 
+## 🧩 Course packs (.json): get one or make one
+
+A **course pack** is one `.json` file that holds a whole course: its notes, lectures, questions, labs, cases and skills. It's how a course moves between people and onto the website. Inside, it looks like this:
+
+```json
+{
+  "format": "study-forge-course",
+  "version": 1,
+  "course": {
+    "id": "biol-105", "code": "BIOL 105", "title": "Molecules of Life",
+    "description": "…", "topics": ["Chemistry of life", "Macromolecules"],
+    "concepts": [ … ], "lectures": [ … ], "questions": [ … ],
+    "labs": [ … ], "cases": [ … ], "skills": [ … ]
+  }
+}
+```
+
+You don't write this JSON by hand. You either export it from the app, or write a course folder of simple Markdown files and let `npm run course:pack` convert the folder to `.json`.
+
+### Get a pack
+
+- **From the app:** **Tools › Add or import a course**, then **Export pack** next to any course, built-in ones included. The file downloads as `<course-id>.med-forge-pack.json`.
+- **From a classmate:** they export or pack their course and send you the `.json` file.
+- **From the website's repo:** packs anyone published are in [`site/src/med/published/`](site/src/med/published/).
+
+The built-in courses are already in the app, so importing one of their packs is refused as a duplicate. To make your own version of a built-in course, unpack its pack (below) and edit it.
+
+### Make a pack from your own notes
+
+You need the project on your computer (see **Run it locally**).
+
+1. **Start a course folder**:
+   ```bash
+   npm run course:new -- BIOL105 "Molecules of Life"
+   ```
+   This creates `courses/BIOL105/` with example files to replace, and a `README.md` describing every field. The folder is git-ignored, so it never leaves your computer.
+2. **Put your notes into the files.** Open `courses/BIOL105/` in any editor (VS Code works well):
+   - `course.json`: the code, title, description and `topics` (your course's modules)
+   - `concepts/<name>.md`: one page per key idea, with a front-matter header (`title`, `topic`, `summary`, `pearls`, optional `formulas` and `model`) and your notes below it
+   - `lectures/<name>.md`: one per lecture, with `week`, `title`, `topic`, `summary`, `insights` (exam tips, clinical links, intuitions)
+   - `questions/<id>.md`: one per question, multiple choice (`options`, `answer`) or numeric (`answer`, `tolerance`, `unit`), with the prompt, then `<!-- split:hints -->` and `<!-- split:explanation -->`
+   - `labs/`, `cases/`, `skills/`: `.yaml` files, copied from the examples
+
+   For a complete working course, copy [`courses.example/MEDS101`](courses.example/MEDS101) (`cp -r courses.example/MEDS101 courses/MEDS101`) and compare.
+
+   A question file looks like this:
+   ```markdown
+   ---
+   id: biol105-q1
+   type: numeric
+   topic: Chemistry of life
+   difficulty: 1
+   concepts: [water-and-ph]
+   answer: 7.4
+   tolerance: 0.05
+   unit: ""
+   ---
+
+   What is the pH of a solution with [H⁺] = 4.0 × 10⁻⁸ mol/L?
+
+   <!-- split:hints -->
+
+   - pH = −log₁₀[H⁺]
+
+   <!-- split:explanation -->
+
+   pH = −log₁₀(4.0 × 10⁻⁸) = 7.40.
+   ```
+3. **Lecture recordings and captions** (optional): turn captions you downloaded from Echo360, Panopto or Kaltura into a lecture file:
+   ```bash
+   npm run course:lecture -- BIOL105 week3.vtt --title "Week 3: Enzymes"
+   ```
+4. **Check it.** Every problem is reported with its file name:
+   ```bash
+   npm run course:check
+   ```
+   A pack needs at least 4 concepts, 6 questions, 2 lectures, 1 lab, 1 case and 1 skill; every `topic` must be listed in `course.json`; and ids must be unique.
+5. **Convert the folder to `.json`:**
+   ```bash
+   npm run course:pack -- BIOL105
+   ```
+   This writes `biol-105.med-forge-pack.json` (named after the course id) in the project folder. Give a second argument to choose the file name: `npm run course:pack -- BIOL105 ~/Desktop/biol105.json`.
+
+Then use the `.json`: import it on the website (**Tools › Add or import a course › Import a course pack (.json)**), send it to a classmate, or publish it for everyone (see **Add courses, images and recordings**).
+
+### Turn a pack back into editable files
+
+```bash
+npm run course:unpack -- biol-105.med-forge-pack.json
+```
+
+This writes `courses/<CODE>/`, named from the course code, or pass a folder name as a second argument. It never overwrites a folder that already exists. Edit the files, then `course:check` and `course:pack` again. A copy of a built-in course gets its own course id and item ids, and "(my copy)" in its title, so it doesn't clash with the original or share its progress.
+
+### Let an AI draft the files from your notes (optional)
+
+Paste the prompt below into an AI chat (for example `ollama run qwen3` on your own computer, which is free), followed by your own lecture notes. Save each file it writes into your course folder under the path after `FILE:`, change the concept slugs and question ids to suit your course, then run `npm run course:check` and fix whatever it reports. Small local models often stop early or repeat a file name; ask them to continue ("write 2 more questions"), or use a larger model (`qwen3`, or an online one in **Settings**). AI drafts make mistakes, so check every fact and answer against your course materials.
+
+```text
+Convert my lecture notes into MedForge course files. Use only facts from my notes.
+Write each file in full, starting with a line "FILE: <path>". No headings, no ``` fences.
+Every topic must be one of: <paste the topics from course.json>.
+Write 4 concept files and 8 question files, exactly in these formats. The names below are
+examples only: give every concept its own file name and slug (e.g. concepts/protein-structure.md)
+and number the questions biol105-q1, biol105-q2, and so on.
+
+FILE: concepts/water-and-ph.md
+---
+title: Water and pH
+topic: Chemistry of life
+summary: One sentence that sums up the idea.
+pearls:
+  - "Acidosis below pH 7.35 can cause confusion and arrhythmias."
+  - "Hyperventilation blows off CO2 and causes respiratory alkalosis."
+---
+The explanation in Markdown. Use $...$ for maths, e.g. $pH = -\log_{10}[H^+]$.
+
+FILE: questions/biol105-q1.md
+---
+id: biol105-q1
+type: mcq
+topic: Chemistry of life
+difficulty: 1
+concepts: [water-and-ph]
+options:
+  - The first answer, written out in full
+  - The second answer
+  - The third answer
+  - The fourth answer
+answer: 1
+---
+The question text.
+
+<!-- split:hints -->
+
+- A first hint.
+- A second hint.
+
+<!-- split:explanation -->
+
+Why the right answer is right.
+
+(Put any line that contains a colon in "double quotes". A numeric question uses
+"type: numeric" and, instead of options, "answer: 7.4",
+"tolerance: 0.05" and "unit: mmHg". "answer" in an mcq is the 0-based index of the right option.)
+
+My notes:
+```
+
 ## 📤 Add courses, images and recordings
 
 There are two ways to add your own material: **in your browser** on the live website (only you see it), or **published** with the website so everyone who opens it sees it.
@@ -193,6 +341,7 @@ npm run course:lecture -- BIOL113 week3.vtt     # lecture notes + AI insights fr
 npm run course:check                            # find problems, with the file name
 npm run course:bundle                           # add every course in courses/ to the web app
 npm run course:pack -- BIOL113                  # one file to send to a classmate
+npm run course:unpack -- pack.json              # a pack back into an editable folder
 ```
 
 ```mermaid

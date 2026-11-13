@@ -154,3 +154,27 @@ describe("course:lecture --id", () => {
     expect(checkOptions(course, { id: "biol105-l9" })).toEqual([]);
   });
 });
+
+describe("course:unpack", () => {
+  it("turns a pack back into a folder that checks and packs again; a built-in copy gets its own ids", async () => {
+    const { wrapPack } = await import("../site/src/med/coursefiles");
+    const { usfBiol105 } = await import("../site/src/med/courses/usf-biol-105");
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "mf-unpack-"));
+    fs.writeFileSync(path.join(cwd, "pack.json"), JSON.stringify(wrapPack(usfBiol105)));
+    const r = run(cwd, "unpack", "pack.json");
+    expect(r.status).toBe(0);
+    expect(r.stdout).toMatch(/own course id "biol-105"/);
+    expect(run(cwd, "check").status).toBe(0);
+    expect(run(cwd, "pack", "BIOL105", "again.json").status).toBe(0);
+    const again = JSON.parse(fs.readFileSync(path.join(cwd, "again.json"), "utf8")).course;
+    expect(again.id).toBe("biol-105");
+    expect(again.questions).toHaveLength(usfBiol105.questions.length);
+    expect(again.questions[0].id).toBe(`biol105-${usfBiol105.questions[0]!.id}`);
+    expect(again.questions[0].prompt).toBe(usfBiol105.questions[0]!.prompt);
+    // Never overwrites, and rejects files that aren't packs.
+    expect(run(cwd, "unpack", "pack.json").status).toBe(1);
+    fs.writeFileSync(path.join(cwd, "bad.json"), JSON.stringify({ hello: 1 }));
+    expect(run(cwd, "unpack", "bad.json", "BAD").stderr).toMatch(/doesn't contain a MedForge course/);
+    expect(run(cwd, "unpack").status).toBe(2);
+  }, 60_000);
+});

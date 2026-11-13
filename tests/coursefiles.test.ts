@@ -238,3 +238,26 @@ describe("lecture recordings in the site's media folder", () => {
     expect(isMediaUrl("media/notes.pdf")).toBe(false);
   });
 });
+
+describe("forgiving course files", () => {
+  it("reads a list item with a colon (YAML turns it into a map) as text", async () => {
+    const { parseCourseFiles } = await import("../site/src/med/coursefiles");
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const dir = path.join(process.cwd(), "courses.example", "MEDS101");
+    const files: Record<string, string> = {};
+    const walk = (d: string, rel = "") => {
+      for (const f of fs.readdirSync(d)) {
+        const p = path.join(d, f);
+        if (fs.statSync(p).isDirectory()) walk(p, `${rel}${f}/`);
+        else files[`${rel}${f}`] = fs.readFileSync(p, "utf8");
+      }
+    };
+    walk(dir);
+    const name = Object.keys(files).find((f) => f.startsWith("concepts/"))!;
+    files[name] = files[name]!.replace(/pearls:\n/, "pearls:\n  - Clinical link: acidosis causes arrhythmias\n");
+    const r = parseCourseFiles(files);
+    expect(r.errors).toEqual([]);
+    expect(r.course!.concepts.some((c) => c.pearls.includes("Clinical link: acidosis causes arrhythmias"))).toBe(true);
+  });
+});
