@@ -40,6 +40,9 @@ export function useRoute(): Route {
   return route;
 }
 
+/** Where the bare site link and the MedForge logo go. Courses stay at #/. */
+export const HOME_HASH = "#/guide";
+
 export function go(path: string): void {
   window.location.hash = path;
 }

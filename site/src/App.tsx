@@ -27,7 +27,7 @@ import { Hub } from "./pages/Hub";
 import { NewPost } from "./pages/NewPost";
 import { Post } from "./pages/Post";
 import { SettingsPage } from "./pages/Settings";
-import { useRoute, type Route } from "./router";
+import { HOME_HASH, useRoute, type Route } from "./router";
 import { loadSettings, saveSettings, type Settings } from "./settings";
 
 function browserStorage(): Storage | null {
@@ -77,7 +77,7 @@ export function App() {
     <>
       <header className="nav">
         <div className="nav-inner">
-          <a href="#/" className="brand" aria-label="MedForge home">
+          <a href={HOME_HASH} className="brand" aria-label="MedForge home: the guide">
             <span className="brand-mark" aria-hidden="true" />
             <span>
               Med<span className="brand-forge">Forge</span>

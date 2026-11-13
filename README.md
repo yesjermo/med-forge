@@ -5,7 +5,7 @@
 **Course notes, practice questions, lab and clinical practice, and cited study blocks for medical, nursing, pre-med and pre-vet students.**
 
 [![CI](https://github.com/yesjermo/med-forge/actions/workflows/ci.yml/badge.svg)](https://github.com/yesjermo/med-forge/actions/workflows/ci.yml)
-[![Live site](https://img.shields.io/badge/live%20site-yesjermo.github.io-2ea44f?logo=github)](https://yesjermo.github.io/med-forge/)
+[![Live site](https://img.shields.io/badge/live%20site-yesjermo.github.io-2ea44f?logo=github)](https://yesjermo.github.io/med-forge/#/guide)
 [![Offline copy](https://img.shields.io/badge/offline%20copy-one%20HTML%20file-0a7ea4?logo=html5&logoColor=white)](https://yesjermo.github.io/med-forge/med-forge.html)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Last commit](https://img.shields.io/github/last-commit/yesjermo/med-forge)](https://github.com/yesjermo/med-forge/commits/main)
@@ -18,7 +18,7 @@
 [![AI: Ollama by default](https://img.shields.io/badge/AI-Ollama%20(free%2C%20local)-000000?logo=ollama&logoColor=white)](https://ollama.com)
 [![Privacy](https://img.shields.io/badge/your%20data-stays%20in%20your%20browser-8250df)](#-run-it)
 
-**[Open MedForge →](https://yesjermo.github.io/med-forge/)**
+**[Open MedForge →](https://yesjermo.github.io/med-forge/#/guide)** · [Courses](https://yesjermo.github.io/med-forge/#/)
 
 <img src=".github/media/tour.gif" alt="A tour of MedForge: the course list, a course dashboard with the course bar, the course switcher, a concept page with notes from the lectures, a graded practice question, the daily review, and the Guide &amp; tutorial page" width="800">
 
