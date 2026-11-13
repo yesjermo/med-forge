@@ -4,7 +4,8 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { courseToFiles, parseCourseFiles, wrapPack } from "../site/src/med/coursefiles";
+import { PACK_FORMAT, courseToFiles, parseCourseFiles, wrapPack } from "../site/src/med/coursefiles";
+import { looksLikeCourse, validateCourse } from "../site/src/med/validate";
 import { COURSES } from "../site/src/med/courses";
 import { createWriter } from "../src/engine/llm/select";
 import { buildLecture, checkOptions, parseLectureArgs, readCourseInfo, writeLecture } from "./course-lecture";
@@ -29,6 +30,8 @@ Usage: npx tsx scripts/course.ts <command>   (or npm run course:<command> -- ...
                                 (the web app picks these up on the next dev/build)
   pack <CODE> [out.json]        Write one shareable pack file (default ./<id>.med-forge-pack.json)
                                 to import in the app under Tools > Add or import a course
+  unpack <pack.json> [CODE]     Turn a course pack (exported from the app or from a classmate) back
+                                into an editable folder, courses/<CODE>/ (default: from its code)
   check                         Validate every course folder without writing anything
   lecture <CODE> <captions>     Add lectures/<id>.md from a captions file you downloaded yourself
                                 (.vtt, .srt or .txt from Echo360, Panopto, Kaltura…). Options:
@@ -353,6 +356,54 @@ function cmdPack(code?: string, outArg?: string) {
 Import it in the app under Tools > Add or import a course. Only share material you're allowed to share.`);
 }
 
+function cmdUnpack(file?: string, codeArg?: string) {
+  if (!file) fail("Usage: npm run course:unpack -- <pack.json> [CODE]", 2);
+  let data: unknown;
+  try {
+    data = JSON.parse(fs.readFileSync(path.resolve(cwd, file!), "utf8"));
+  } catch (e) {
+    fail(`Couldn't read ${file} as JSON: ${(e as Error).message}`);
+  }
+  // Accept a wrapped pack ({format, version, course}) or a bare course object.
+  if (data && typeof data === "object" && "format" in (data as object)) {
+    const pack = data as { format?: unknown; course?: unknown };
+    if (pack.format !== PACK_FORMAT) fail(`${file} isn't a MedForge course pack (format "${String(pack.format)}").`);
+    data = pack.course;
+  }
+  if (!looksLikeCourse(data)) fail(`${file} doesn't contain a MedForge course (it needs an id, code, title, topics and content lists).`);
+  let course = data as Course;
+  const problems = validateCourse(course);
+  if (problems.length) fail(`${file} has ${problems.length} problem(s):\n  - ${problems.slice(0, 10).join("\n  - ")}`);
+  const code = codeArg ?? course.code.replace(/[^A-Za-z0-9_-]+/g, "").toUpperCase();
+  if (!/^[A-Za-z0-9][A-Za-z0-9_-]*$/.test(code)) fail(`Folder name "${code}" should be letters, digits, - or _. Pass one: npm run course:unpack -- ${file} BIOL105`, 2);
+  const dir = path.join(COURSES_DIR, code);
+  if (fs.existsSync(dir)) fail(`courses/${code}/ already exists; not overwriting it. Pass another folder name as the second argument.`);
+  // A copy of a built-in course gets its own ids, so it doesn't clash with (or share progress with) the original.
+  const builtIn = COURSES.some((c) => c.id === course.id);
+  if (builtIn) course = renameIds(course, slugFromCode(code), code.toLowerCase().replace(/[^a-z0-9]+/g, ""));
+  writeFiles(dir, courseToFiles(course));
+  if (builtIn) console.log(`Note: this is a copy of a built-in course, so it now has its own course id "${course.id}" and item ids.`);
+  console.log(`✓ ${file} → courses/${code}/  ${summary(course)}
+Edit the files, then run:
+  npm run course:check
+  npm run course:pack -- ${code}    # back to one .json file`);
+}
+
+/** The same course under a new course id, with every question, lab, case, skill and lecture id prefixed. */
+function renameIds(course: Course, id: string, prefix: string): Course {
+  const re = <T extends { id: string }>(xs: T[]) => xs.map((x) => ({ ...x, id: `${prefix}-${x.id}` }));
+  return {
+    ...course,
+    id,
+    title: course.title.endsWith("(my copy)") ? course.title : `${course.title} (my copy)`,
+    questions: re(course.questions),
+    lectures: re(course.lectures),
+    labs: re(course.labs),
+    cases: re(course.cases),
+    skills: re(course.skills),
+  };
+}
+
 function cmdCheck() {
   const loaded = loadCourses();
   for (const { folder, course } of loaded) console.log(`✓ courses/${folder}/  ${summary(course)}`);
@@ -431,6 +482,9 @@ switch (command) {
     break;
   case "pack":
     cmdPack(args[0], args[1]);
+    break;
+  case "unpack":
+    cmdUnpack(args[0], args[1]);
     break;
   case "check":
     cmdCheck();

@@ -16,6 +16,7 @@
     "course:new": "tsx scripts/course.ts new",
     "course:bundle": "tsx scripts/course.ts bundle",
     "course:pack": "tsx scripts/course.ts pack",
+    "course:unpack": "tsx scripts/course.ts unpack",
     "course:check": "tsx scripts/course.ts check",
     "course:lecture": "tsx scripts/course.ts lecture"
   },
