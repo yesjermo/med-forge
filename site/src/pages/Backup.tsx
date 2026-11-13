@@ -52,6 +52,8 @@ function SummaryList({ s }: { s: BackupSummary }) {
   );
 }
 
+const DONE_KEY = "med-forge:backup-done";
+
 export function BackupPage({ refresh }: { refresh: () => void }) {
   const [revision, setRevision] = useState(0);
   const storage = browserStorage();
@@ -77,13 +79,27 @@ export function BackupPage({ refresh }: { refresh: () => void }) {
   const [busy, setBusy] = useState(false);
 
   const [deleteCards, setDeleteCards] = useState(false);
-  const [done, setDone] = useState<string | null>(null);
+  const [done, setDone] = useState<string | null>(() => {
+    try {
+      const text = sessionStorage.getItem(DONE_KEY);
+      sessionStorage.removeItem(DONE_KEY);
+      return text;
+    } catch {
+      return null;
+    }
+  });
   const [slateError, setSlateError] = useState<string | null>(null);
 
+  // refresh() reloads the page, so leave the message for the reloaded page to show.
   const after = (text: string) => {
-    refresh();
+    try {
+      sessionStorage.setItem(DONE_KEY, text);
+    } catch {
+      // No session storage: the message just won't survive the reload.
+    }
     setRevision((n) => n + 1);
     setDone(text);
+    refresh();
   };
 
   async function copyString() {
@@ -194,11 +210,8 @@ export function BackupPage({ refresh }: { refresh: () => void }) {
       {done && (
         <div className="backup-done" role="status">
           <p>
-            <strong>{done}</strong> If a page still shows old progress, reload it.
+            <strong>{done}</strong>
           </p>
-          <button className="small" type="button" onClick={() => window.location.reload()}>
-            Reload now
-          </button>
         </div>
       )}
 

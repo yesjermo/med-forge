@@ -7,6 +7,9 @@ import { WriterUnavailableError } from "./engine/llm/types";
 import { PACKS, PACK_NAMES, isPackName } from "./engine/prompts";
 import { providerStatus, selectProviders } from "./engine/research/registry";
 import { lint, formatIssues } from "./engine/validator";
+import { loadLocalEnv } from "./engine/env";
+
+loadLocalEnv();
 
 const HELP = `med-forge — turn source material into exchangeable study blocks
 
