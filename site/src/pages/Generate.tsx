@@ -58,7 +58,7 @@ export function Generate({ mode, settings, onSettings }: { mode: "generate" | "c
           <div className="field">
             <span>Writer</span>
             <a className="writer-link" href="#/settings">
-              {settings.writer === "ollama" ? "Ollama (free)" : settings.writer === "custom" ? "Custom API" : settings.writer}{" "}
+              {settings.writer === "ollama" ? "Ollama (free)" : settings.writer === "custom" ? "Custom API" : API_PROVIDERS[settings.writer].label}{" "}
               <span className="hint">change</span>
             </a>
           </div>

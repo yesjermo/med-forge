@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { API_PROVIDERS, OLLAMA_MODELS, type ModelChoice } from "@/engine/llm/models";
 import { DEFAULT_OLLAMA_HOST, listOllamaModels, sameModel, type InstalledModel } from "@/engine/llm/ollama";
 import { siteOrigin, type WriterChoice } from "../settings";
@@ -33,15 +33,37 @@ type Status = { kind: "loading" } | { kind: "ok"; installed: InstalledModel[] } 
 /** Ask Ollama which models are installed; refresh() asks again (e.g. after `ollama pull`). */
 export function useOllamaModels(host: string, enabled = true) {
   const [status, setStatus] = useState<Status>({ kind: "loading" });
-  const refresh = useCallback(() => {
+  const [attempt, setAttempt] = useState(0);
+  const first = useRef(true);
+  useEffect(() => {
     if (!enabled) return;
     setStatus({ kind: "loading" });
-    listOllamaModels(host || DEFAULT_OLLAMA_HOST).then(
-      (installed) => setStatus({ kind: "ok", installed }),
-      (e: unknown) => setStatus({ kind: "offline", message: e instanceof Error ? e.message : String(e) }),
-    );
-  }, [host, enabled]);
-  useEffect(refresh, [refresh]);
+    const ctrl = new AbortController();
+    // Ask straight away the first time (and on "Check again"); while the address is being typed,
+    // wait for a pause. Give up after 5 s: an unreachable LAN host would otherwise hang for minutes.
+    const delay = first.current ? 0 : 400;
+    first.current = false;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const start = setTimeout(() => {
+      timeout = setTimeout(() => ctrl.abort("timeout"), 5000);
+      listOllamaModels(host || DEFAULT_OLLAMA_HOST, undefined, ctrl.signal).then(
+        (installed) => !ctrl.signal.aborted && setStatus({ kind: "ok", installed }),
+        (e: unknown) => {
+          if (ctrl.signal.aborted && ctrl.signal.reason !== "timeout") return; // a newer request replaced this one
+          setStatus({ kind: "offline", message: e instanceof Error ? e.message : String(e) });
+        },
+      );
+    }, delay);
+    return () => {
+      clearTimeout(start);
+      clearTimeout(timeout);
+      ctrl.abort("superseded");
+    };
+  }, [host, enabled, attempt]);
+  const refresh = useCallback(() => {
+    first.current = true;
+    setAttempt((n) => n + 1);
+  }, []);
   return { status, refresh };
 }
 
@@ -70,9 +92,12 @@ export function ModelPicker({
   const toDownload = suggestions.filter((m) => !installed.some((i) => sameModel(i.name, m.id)));
   const known = [...installed.map((m) => m.name), ...suggestions.map((m) => m.id)];
   const match = known.find((k) => sameModel(k, value));
-  const [typing, setTyping] = useState(() => Boolean(value) && !match && writer !== "custom");
-  const showOther = writer === "custom" || typing || (Boolean(value) && !match);
-  const selected = showOther ? OTHER : (match ?? "");
+  // "Other…" is a choice the student makes for one writer; a saved model that isn't in the list
+  // (or isn't loaded yet) is shown as its own option instead of switching to the text box.
+  const [otherFor, setOtherFor] = useState<WriterChoice | null>(null);
+  const showOther = writer === "custom" || otherFor === writer;
+  const current = value && !match ? value : null;
+  const selected = showOther ? OTHER : (match ?? current ?? "");
   const missing = isOllama && status.kind === "ok" && value && !installed.some((i) => sameModel(i.name, value));
 
   return (
@@ -84,14 +109,20 @@ export function ModelPicker({
           value={selected}
           onChange={(e) => {
             if (e.target.value === OTHER) {
-              setTyping(true);
+              setOtherFor(writer);
               return;
             }
-            setTyping(false);
+            setOtherFor(null);
             onChange(e.target.value);
           }}
         >
           {!selected && <option value="">Choose a model…</option>}
+          {current && (
+            <option value={current}>
+              {current}
+              {isOllama && status.kind === "loading" ? "" : " (current)"}
+            </option>
+          )}
           {installed.length > 0 && (
             <optgroup label="Installed on this computer">
               {installed.map((m) => (
@@ -120,7 +151,7 @@ export function ModelPicker({
           onChange={(e) => onChange(e.target.value.trim())}
           placeholder={isOllama ? "e.g. llama3.2 or mistral" : "model id"}
           spellCheck={false}
-          autoFocus={typing}
+          autoFocus={otherFor === writer}
         />
       )}
       {isOllama && (

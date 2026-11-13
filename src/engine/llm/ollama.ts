@@ -132,11 +132,16 @@ export const sameModel = (a: string, b: string) => a.replace(/:latest$/, "") ===
  * Models installed in Ollama (GET /api/tags). Throws WriterUnavailableError when Ollama can't be
  * reached, so the caller can say "start Ollama" instead of listing nothing.
  */
-export async function listOllamaModels(host = DEFAULT_OLLAMA_HOST, fetchImpl: typeof fetch = (...a) => fetch(...a)): Promise<InstalledModel[]> {
+export async function listOllamaModels(
+  host = DEFAULT_OLLAMA_HOST,
+  fetchImpl: typeof fetch = (...a) => fetch(...a),
+  signal?: AbortSignal,
+): Promise<InstalledModel[]> {
   let res: Response;
   try {
-    res = await fetchImpl(`${host.replace(/\/+$/, "")}/api/tags`);
-  } catch {
+    res = await fetchImpl(`${host.replace(/\/+$/, "")}/api/tags`, signal ? { signal } : undefined);
+  } catch (e) {
+    if (signal?.aborted && signal.reason !== "timeout") throw e;
     throw new WriterUnavailableError(`Can't reach Ollama at ${host}.`);
   }
   if (!res.ok) throw new WriterUnavailableError(`Ollama at ${host} returned ${res.status}.`);
