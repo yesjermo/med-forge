@@ -66,7 +66,7 @@ export function QuestionList({
             return (
               <li key={q.id} className="post-row">
                 <div className="post-main">
-                  <a className="post-title" href={courseHref(course, "questions", q.id)}>
+                  <a className="post-title" href={`${courseHref(course, "questions", q.id)}${topic ? `?topic=${encodeURIComponent(topic)}` : ""}`}>
                     <MedText text={q.prompt} inline />
                   </a>
                   <div className="post-meta">
@@ -174,14 +174,26 @@ export function QuestionView({
               ) : (
                 <label className="field numeric">
                   <span>Your answer{question.unit ? ` (${question.unit})` : ""}</span>
-                  <input
-                    inputMode="decimal"
-                    value={typed}
-                    disabled={submitted}
-                    onChange={(e) => setTyped(e.target.value)}
-                    placeholder="e.g. 4.9 or 1.5e9"
-                    autoComplete="off"
-                  />
+                  <span className="numeric-row">
+                    <input
+                      inputMode="decimal"
+                      value={typed}
+                      disabled={submitted}
+                      onChange={(e) => setTyped(e.target.value)}
+                      placeholder="e.g. 4.9 or 1.5e9"
+                      autoComplete="off"
+                    />
+                    {/* Phone number pads have no minus key. */}
+                    <button
+                      type="button"
+                      className="secondary small"
+                      disabled={submitted}
+                      aria-label="Switch the sign (plus or minus)"
+                      onClick={() => setTyped((t) => (t.trim().startsWith("-") ? t.trim().slice(1) : `-${t.trim()}`))}
+                    >
+                      ±
+                    </button>
+                  </span>
                 </label>
               )}
 
@@ -280,14 +292,19 @@ export function QuestionPage({
   id,
   progress,
   refresh,
+  topic = null,
 }: {
   course: Course;
   id: string;
   progress: ProgressStore;
   refresh: () => void;
+  /** When opened from a topic filter, Next stays inside that topic. */
+  topic?: string | null;
 }) {
-  const i = course.questions.findIndex((q) => q.id === id);
-  const q = course.questions[i];
+  const inTopic = topic ? course.questions.filter((x) => x.topic === topic) : [];
+  const list = inTopic.some((x) => x.id === id) ? inTopic : course.questions;
+  const i = list.findIndex((q) => q.id === id);
+  const q = list[i];
   if (!q) {
     return (
       <main className="shell narrow">
@@ -296,10 +313,11 @@ export function QuestionPage({
       </main>
     );
   }
-  const next = course.questions[i + 1];
+  const next = list[i + 1];
+  const keep = list === inTopic && topic ? `?topic=${encodeURIComponent(topic)}` : "";
   return (
     <main className="shell narrow">
-      <Crumbs course={course} here={`Question ${i + 1} of ${course.questions.length}`} />
+      <Crumbs course={course} here={`Question ${i + 1} of ${list.length}${keep ? ` · ${topic}` : ""}`} />
       {/* key resets the form when moving between questions */}
       <QuestionView
         key={q.id}
@@ -307,7 +325,7 @@ export function QuestionPage({
         question={q}
         progress={progress}
         refresh={refresh}
-        {...(next ? { nextHref: courseHref(course, "questions", next.id) } : {})}
+        {...(next ? { nextHref: `${courseHref(course, "questions", next.id)}${keep}` } : {})}
       />
     </main>
   );
