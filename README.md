@@ -85,6 +85,34 @@ Your progress lives in your browser. **Save / Load** in the top bar:
 
 Settings and API keys are never included in a save string or backup file.
 
+## 📤 Add courses, images and recordings
+
+There are two ways to add your own material: **in your browser** on the live website (only you see it), or **published** with the website so everyone who opens it sees it.
+
+### In your browser, on the live website (no install)
+
+Open https://yesjermo.github.io/med-forge/. Everything you add this way stays in your browser; nothing is uploaded anywhere. Use **Save / Load** to move it to another device.
+
+| You have | Where to add it | What happens |
+|---|---|---|
+| A course pack (`.json`) | **Tools › Add or import a course › Import a course pack (.json)** | The course appears on the home page with its notes, questions, labs and cases. Packs come from `npm run course:pack`, a classmate, or **Export pack** on that same page |
+| A photo or screenshot (`.jpg`, `.png`, …) or a PDF of a past paper | **Tools › Question snipper**: choose the file, drag it in, or paste a screenshot | Drag a box around a problem (and its answer); it becomes a card in your **Daily review**. PDFs work on the website; the one-file offline copy takes images only |
+| A lecture recording (`.mp4`, `.m4a`, `.mp3`, `.webm`, …) | Open any lecture › **Add a recording** › pick the file | It plays with the lecture's chapters and insights alongside. An `.mp4` plays its sound. The file stays on your computer, so pick it again next visit |
+| Lecture captions (`.vtt`, `.srt`, `.txt`, e.g. exported from Echo360) | **Tools › Lecture recording to insights** | The AI finds timed exam tips; save them as a lecture in a course you imported, or download the lecture file for a course folder |
+| A backup or save string | **Save / Load** | Restores your progress, notebook, packs and scratchpads (merge or replace) |
+
+### Published, so everyone sees it (through GitHub)
+
+Anything committed to the repo is built into the website by the CI workflow on every push to `main` (about a minute).
+
+1. **Course packs:** put the `.json` file in **`site/src/med/published/`**. Either run `npm run course:bundle -- --publish` to write your course folders there, or drop in a pack you exported from the app (**Export pack**) or made with `npm run course:pack`. Without a computer: on GitHub, open the `site/src/med/published` folder, choose **Add file › Upload files**, drop the `.json` in and commit.
+2. **Lecture recordings:** put the file in **`site/public/media/`** and point the lecture at it in its front matter with `audio: media/week3.m4a` (or `--audio media/week3.m4a` with `npm run course:lecture`). A link to a recording hosted elsewhere (`audio: https://…`) also works and keeps the repo small.
+3. Commit and push (or commit on GitHub). When the **CI** run on the **Actions** tab is green, reload the website.
+
+Limits and rules:
+- GitHub refuses files over 100 MB and warns above 50 MB, and a GitHub Pages site can be at most 1 GB. Prefer short, audio-only `.m4a` or `.mp3` files; for long lectures, link to a recording hosted elsewhere.
+- Published files are public. Only publish what you wrote yourself or have permission to share: not your university's slides, exam papers or lecture recordings. Keep those in the private `courses/` folder, which is never uploaded.
+
 ## 🧭 Workflow map
 
 How the pieces fit into a study week. Everything runs in your browser; the only things that leave it are the AI requests you choose to make (to Ollama on your own computer, or to a provider you add a key for) and paper searches.
@@ -200,16 +228,33 @@ Reference ranges vary between labs and textbooks; use your course's values in ex
 
 MedForge runs entirely in the browser: no server, no account. Progress, notes and keys stay on your device.
 
-**On your computer** (needs [Node.js](https://nodejs.org) 22.13+):
+### 💻 Run it locally
+
+You need [Node.js](https://nodejs.org) 22.13 or newer (check with `node -v`) and, for the free AI writer, [Ollama](https://ollama.com).
+
+1. Get the code and install it (once):
+   ```bash
+   git clone https://github.com/yesjermo/med-forge.git
+   cd med-forge
+   npm install
+   ```
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+3. Open http://localhost:5173/med-forge/. Changes to the code reload the page by themselves. Press `Ctrl+C` in the terminal to stop.
+4. Optional, the free AI writer: install Ollama, then `ollama pull qwen2.5` (or `qwen3`), and pick the model in **Settings**. Ollama already allows `localhost`, so nothing else is needed locally.
+5. Optional, your own courses: see **Add your own university course** below (`npm run course:new`, `course:check`, `course:bundle`).
+
+To try the exact build that goes to GitHub Pages:
 
 ```bash
-npm install
-```
-```bash
-npm run dev
+npm run build && npm run preview
 ```
 
-Then open http://localhost:5173/med-forge/. For the AI writer, install [Ollama](https://ollama.com) and run `ollama pull qwen2.5` (see **Choosing the AI model**).
+Then open http://localhost:4173/med-forge/. If a port is already in use, Vite says so and picks another; use the address it prints.
+
+Everything to check before pushing: `npm run typecheck && npm test && npm run build`.
 
 **Publish it on GitHub Pages:**
 
@@ -223,7 +268,7 @@ Then open http://localhost:5173/med-forge/. For the AI writer, install [Ollama](
 npm run single
 ```
 
-It writes **`web/index.html`** (about 1.4 MB, everything inlined). Build outputs aren't kept in git, so run it once after cloning; on GitHub Pages the same file is offered by the footer link **Offline copy**. A page opened from a file works for everything except Ollama (Ollama only accepts file pages if you allow every website) and PDF snipping (screenshots still work). Don't open `site/index.html` directly: it's source code for Vite and shows a blank page.
+It writes **`web/index.html`** (about 2 MB, everything inlined). Build outputs aren't kept in git, so run it once after cloning; on GitHub Pages the same file is offered by the footer link **Offline copy**. A page opened from a file works for everything except Ollama (Ollama only accepts file pages if you allow every website) and PDF snipping (screenshots still work). Don't open `site/index.html` directly: it's source code for Vite and shows a blank page.
 
 ### 🖥️ Previewing in VS Code
 
@@ -419,6 +464,8 @@ Clinical figures in the courses (reference ranges, vital-sign norms, risk-scale 
 | `courses.example/` | An example course folder; copy it into `courses/` (kept off GitHub) to make your own |
 | `examples/` | An example lecture and study pack for the generator CLI |
 | `scripts/` | The course-folder CLI (`npm run course:*`) |
+| `site/src/med/published/` | Course packs built into the website for everyone (committed) |
+| `site/public/media/` | Lecture recordings published with the website (committed) |
 | `.github/` | The CI and Pages workflow, issue templates, and the GIFs in this README (`.github/media/`) |
 
 ## 🛠️ Development

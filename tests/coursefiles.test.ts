@@ -225,3 +225,16 @@ describe("scripts/course.ts CLI", () => {
     }
   }, 60_000);
 });
+
+describe("lecture recordings in the site's media folder", () => {
+  it("accepts http(s) links and media/<file>, nothing else", async () => {
+    const { isMediaUrl } = await import("../site/src/med/validate");
+    expect(isMediaUrl("https://example.org/w3.mp3")).toBe(true);
+    expect(isMediaUrl("media/biol105/week3.m4a")).toBe(true);
+    expect(isMediaUrl("media/week3.mp4")).toBe(true);
+    expect(isMediaUrl("media/../secret.mp3")).toBe(false);
+    expect(isMediaUrl("/etc/passwd")).toBe(false);
+    expect(isMediaUrl("javascript:alert(1)")).toBe(false);
+    expect(isMediaUrl("media/notes.pdf")).toBe(false);
+  });
+});

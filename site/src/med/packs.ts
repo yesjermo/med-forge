@@ -3,9 +3,11 @@ import type { Course } from "./types";
 import { looksLikeCourse, validateCourse } from "./validate";
 
 /**
- * Runtime course registry: built-in courses, courses bundled from private folders
- * (npm run course:bundle writes site/src/med/local/<id>.json, git-ignored) and packs the
- * student imported in the browser (kept in localStorage).
+ * Runtime course registry: built-in courses, courses bundled at build time and packs the
+ * student imported in the browser (kept in localStorage). Bundled courses come from two folders:
+ * - site/src/med/local/*.json: private (git-ignored), written by `npm run course:bundle`
+ * - site/src/med/published/*.json: committed, so they're on the deployed website for everyone
+ *   (written by `npm run course:bundle -- --publish`, or drop a downloaded course pack in).
  */
 
 export const PACKS_STORAGE_KEY = "study-forge:med-packs";
@@ -17,17 +19,26 @@ interface CourseEntry {
   source: CourseSource;
 }
 
-const localModules = import.meta.glob<unknown>("./local/*.json", { eager: true, import: "default" });
+const bundled = {
+  ...import.meta.glob<unknown>("./published/*.json", { eager: true, import: "default" }),
+  // Private folders last, so a local copy of a course replaces the published one on your computer.
+  ...import.meta.glob<unknown>("./local/*.json", { eager: true, import: "default" }),
+};
 
-/** Courses from site/src/med/local/*.json that pass validation (anything else is skipped with a warning). */
-const LOCAL_COURSES: Course[] = Object.entries(localModules).flatMap(([path, data]) => {
-  const problems = checkCourse(data);
-  if (problems.length) {
-    console.warn(`Skipping ${path}: ${problems.slice(0, 3).join("; ")}`);
-    return [];
-  }
-  return [data as Course];
-});
+/** Bundled courses that pass validation (anything else is skipped with a warning). Packs are unwrapped. */
+const LOCAL_COURSES: Course[] = [
+  ...new Map(
+    Object.entries(bundled).flatMap(([path, raw]) => {
+      const data = raw && typeof raw === "object" && (raw as { format?: unknown }).format === PACK_FORMAT ? (raw as { course: unknown }).course : raw;
+      const problems = checkCourse(data);
+      if (problems.length) {
+        console.warn(`Skipping ${path}: ${problems.slice(0, 3).join("; ")}`);
+        return [];
+      }
+      return [[(data as Course).id, data as Course] as const];
+    }),
+  ).values(),
+];
 
 function checkCourse(x: unknown): string[] {
   if (!looksLikeCourse(x)) return ["it isn't a MedForge course (missing id, title, code, topics or content lists)"];

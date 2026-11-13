@@ -10,6 +10,7 @@ import { extractInsights, type ExtractProgress } from "../site/src/med/lecture/e
 import { formatTime, parseTranscript, toWindows, transcriptRange, type Segment } from "../site/src/med/lecture/transcript";
 import type { Lecture, LectureChapter } from "../site/src/med/types";
 import type { Writer } from "../src/engine/llm/types";
+import { isMediaUrl } from "../site/src/med/validate";
 
 export interface LectureOptions {
   /** Lecture id; default `<code>-l<N>` with the next free N. */
@@ -71,7 +72,9 @@ export function checkOptions(course: CourseInfo, opts: LectureOptions): string[]
   }
   if (opts.topic === undefined && !course.topics.length) errs.push("course.json lists no topics; add one first.");
   if (opts.week !== undefined && !(Number.isInteger(opts.week) && opts.week >= 0)) errs.push("--week must be a whole number (0 or more).");
-  if (opts.audio !== undefined && !/^https?:\/\/\S+$/i.test(opts.audio)) errs.push("--audio must be an http(s) URL to the recording (a direct media link).");
+  if (opts.audio !== undefined && !isMediaUrl(opts.audio)) {
+    errs.push("--audio must be an http(s) link to the recording, or media/<file> for a recording in site/public/media/.");
+  }
   if (opts.id !== undefined && !/^[a-z0-9][a-z0-9_-]*$/i.test(opts.id)) errs.push("--id should be letters, digits, - or _.");
   if (opts.id !== undefined && course.lectures.some((l) => l.id === opts.id)) {
     errs.push(`A lecture with id "${opts.id}" already exists; not overwriting it. Pick another --id or leave it out.`);

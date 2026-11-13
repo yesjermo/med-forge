@@ -87,10 +87,17 @@ export function validateCourse(c: Course): string[] {
 
 const isTime = (t: unknown) => typeof t === "number" && Number.isFinite(t) && t >= 0;
 
+/** An http(s) link, or a recording committed to site/public/media/ and referenced as "media/<file>". */
+export function isMediaUrl(v: string): boolean {
+  return /^https?:\/\/\S+$/i.test(v) || /^media\/[\w.\-/]+\.(mp3|m4a|mp4|m4v|webm|ogg|oga|opus|wav|aac|flac)$/i.test(v) && !v.includes("..");
+}
+
 /** Recording fields of one lecture: an http(s) audio URL, timestamps ≥ 0, chapters in time order. */
 export function validateLectureMedia(l: Lecture): string[] {
   const errs: string[] = [];
-  if (l.audio !== undefined && !/^https?:\/\/\S+$/i.test(l.audio)) errs.push(`lecture ${l.id}: audio must be an http(s) URL`);
+  if (l.audio !== undefined && !isMediaUrl(l.audio)) {
+    errs.push(`lecture ${l.id}: audio must be an http(s) URL or a file in the site's media/ folder (e.g. media/week3.mp3)`);
+  }
   l.insights.forEach((i, n) => {
     if (i.at !== undefined && !isTime(i.at)) errs.push(`lecture ${l.id} insight ${n + 1}: "at" must be a time in seconds (0 or more)`);
   });
