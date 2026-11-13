@@ -145,3 +145,12 @@ describe("course lecture CLI", () => {
     }
   }, 90_000);
 });
+
+describe("course:lecture --id", () => {
+  it("refuses an id an existing lecture already uses, even in a differently named file", async () => {
+    const { checkOptions } = await import("../scripts/course-lecture");
+    const course = { code: "BIOL105", topics: ["T"], lectures: [{ id: "biol105-l2", week: 2 }], files: ["week2.md"] };
+    expect(checkOptions(course, { id: "biol105-l2" }).join(" ")).toMatch(/already exists/);
+    expect(checkOptions(course, { id: "biol105-l9" })).toEqual([]);
+  });
+});

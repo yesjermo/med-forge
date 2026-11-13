@@ -73,6 +73,9 @@ export function checkOptions(course: CourseInfo, opts: LectureOptions): string[]
   if (opts.week !== undefined && !(Number.isInteger(opts.week) && opts.week >= 0)) errs.push("--week must be a whole number (0 or more).");
   if (opts.audio !== undefined && !/^https?:\/\/\S+$/i.test(opts.audio)) errs.push("--audio must be an http(s) URL to the recording (a direct media link).");
   if (opts.id !== undefined && !/^[a-z0-9][a-z0-9_-]*$/i.test(opts.id)) errs.push("--id should be letters, digits, - or _.");
+  if (opts.id !== undefined && course.lectures.some((l) => l.id === opts.id)) {
+    errs.push(`A lecture with id "${opts.id}" already exists; not overwriting it. Pick another --id or leave it out.`);
+  }
   return errs;
 }
 
