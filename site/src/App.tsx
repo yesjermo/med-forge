@@ -12,6 +12,7 @@ import { Research } from "./med/pages/Research";
 import { Terms } from "./med/pages/Terms";
 import { ImportPage } from "./med/pages/Import";
 import { LectureImportPage } from "./med/pages/LectureImport";
+import { BackupPage } from "./pages/Backup";
 import { ToolsPage } from "./med/pages/Tools";
 import { ConceptList, ConceptPage, Lectures, NotFound, Revision } from "./med/pages/Notes";
 import { Exam, Review } from "./med/pages/Practice";
@@ -45,6 +46,7 @@ const NAV = [
     match: (p: string) => ["/tools", "/lab", "/nursing", "/reference", "/terms", "/research", "/generate", "/check", "/courses", "/lecture-import", "/import"].includes(p),
   },
   { href: "#/hub", label: "Notebook", match: (p: string) => p.startsWith("/hub") },
+  { href: "#/backup", label: "Save / Load", match: (p: string) => p === "/backup" },
   { href: "#/settings", label: "Settings", match: (p: string) => p === "/settings" },
 ];
 
@@ -129,8 +131,10 @@ function pageFor(
   if (route.path === "/import") return <ImportPage refresh={refresh} />;
   if (route.path === "/lecture-import") return <LectureImportPage registry={registry} refresh={refresh} />;
   if (route.path === "/generate" || route.path === "/check") {
-    return <Generate mode={route.path === "/check" ? "check" : "generate"} settings={settings} />;
+    return <Generate mode={route.path === "/check" ? "check" : "generate"} settings={settings} onSettings={updateSettings} />;
   }
+  // The app holds progress, notebook and packs in memory, so reload after a restore or clean slate.
+  if (route.path === "/backup") return <BackupPage refresh={() => window.location.reload()} />;
   if (route.path === "/settings") return <SettingsPage settings={settings} onSave={updateSettings} />;
 
   if (first === "hub" && !second) return <Hub notebook={notebook} route={route} refresh={refresh} />;
