@@ -41,6 +41,17 @@ describe("lab maths", () => {
     expect(checkNumber("abc", 1, 0.1)).toEqual({ ok: false, value: null });
     expect(checkNumber("", 0, 0.1)).toEqual({ ok: false, value: null });
   });
+
+  it("accepts a decimal comma, a trailing unit or %, and a typographic minus", () => {
+    expect(checkNumber("4,9", 4.9, 0.05).ok).toBe(true);
+    expect(checkNumber("4.9 L/min", 4.9, 0.05).ok).toBe(true);
+    expect(checkNumber("12,5 mmHg", 12.5, 0.05).ok).toBe(true);
+    expect(checkNumber("50%", 50, 0.5).ok).toBe(true);
+    expect(checkNumber("−3", -3, 0).ok).toBe(true);
+    expect(checkNumber("1.5×10^-3", 0.0015, 1e-5).ok).toBe(true);
+    expect(checkNumber("1,234", 1234, 0).ok).toBe(true);
+    expect(checkNumber("3/4", 0.75, 0.01)).toEqual({ ok: false, value: null });
+  });
 });
 
 describe("SM-2 scheduling", () => {

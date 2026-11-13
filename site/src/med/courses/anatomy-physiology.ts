@@ -317,6 +317,194 @@ Normal arterial values: pH 7.35–7.45, $P_{aCO_2}$ 35–45 mmHg, $HCO_3^-$ 22�
       explanation: "$pH = 6.1 + \\log_{10}(24 / 1.2) = 6.1 + \\log_{10} 20 = 6.1 + 1.30 = 7.40$.",
       concepts: ["acid-base"],
     },
+    {
+      id: "ap-q9",
+      type: "numeric",
+      topic: "Cardiovascular",
+      difficulty: 2,
+      prompt:
+        "The left ventricle has an end-diastolic volume of 120 mL and an end-systolic volume of 50 mL. What is the ejection fraction (%), to 1 decimal place?",
+      answer: 58.3,
+      tolerance: 0.5,
+      unit: "%",
+      hints: ["Stroke volume = EDV − ESV.", "Ejection fraction = SV / EDV × 100."],
+      explanation:
+        "$SV = 120 - 50 = 70$ mL, so $EF = 70 / 120 \\times 100 = 58.3\\%$. A resting ejection fraction of roughly 55–70% is normal; a low value suggests reduced contractility.",
+      concepts: ["cardiac-output"],
+    },
+    {
+      id: "ap-q10",
+      type: "mcq",
+      topic: "Cardiovascular",
+      difficulty: 2,
+      prompt:
+        "Just after the second heart sound, left ventricular pressure is falling quickly but ventricular volume is not changing. Which phase of the cardiac cycle is this?",
+      options: ["Isovolumetric contraction", "Rapid ejection", "Isovolumetric relaxation", "Rapid ventricular filling"],
+      answer: 2,
+      hints: ["S2 is closure of the semilunar valves.", "If volume is constant, every valve must be shut."],
+      explanation:
+        "After S2 the aortic valve has closed and the mitral valve hasn't yet opened, so the ventricle relaxes with all valves shut: isovolumetric relaxation. Filling starts once ventricular pressure drops below atrial pressure and the mitral valve opens.",
+      concepts: ["cardiac-cycle"],
+    },
+    {
+      id: "ap-q11",
+      type: "numeric",
+      topic: "Cardiovascular",
+      difficulty: 3,
+      prompt:
+        "A patient's mean arterial pressure is 90 mmHg and cardiac output is 5 L/min. Ignoring right atrial pressure, what is the total peripheral resistance in mmHg·min/L?",
+      answer: 18,
+      tolerance: 0.1,
+      unit: "mmHg·min/L",
+      hints: ["$MAP = CO \\times TPR$", "Rearrange to $TPR = MAP / CO$."],
+      explanation:
+        "$TPR = 90 / 5 = 18$ mmHg·min/L. If vasodilation (as in sepsis) halved TPR with no change in cardiac output, MAP would halve too.",
+      concepts: ["cardiac-output"],
+    },
+    {
+      id: "ap-q12",
+      type: "mcq",
+      topic: "Cardiovascular",
+      difficulty: 3,
+      prompt: "A patient loses about a litre of blood. Which response best explains the tachycardia that follows?",
+      options: [
+        "Increased baroreceptor firing raises parasympathetic (vagal) tone to the heart",
+        "Reduced baroreceptor firing increases sympathetic outflow and withdraws vagal tone",
+        "A rise in preload stretches the ventricle and speeds the sinoatrial node",
+        "Low blood oxygen content directly stimulates the sinoatrial node",
+      ],
+      answer: 1,
+      hints: ["Baroreceptors in the carotid sinus and aortic arch sense stretch.", "What happens to arterial stretch when stroke volume and MAP fall?"],
+      explanation:
+        "Haemorrhage lowers venous return, preload and stroke volume, so MAP falls. The carotid and aortic baroreceptors fire less, the brainstem increases sympathetic drive and withdraws vagal tone, and heart rate and vasoconstriction rise to defend MAP. Preload falls, not rises.",
+      concepts: ["cardiac-output"],
+    },
+    {
+      id: "ap-q13",
+      type: "numeric",
+      topic: "Respiratory",
+      difficulty: 1,
+      prompt: "Tidal volume is 450 mL and respiratory rate is 16/min. What is the minute ventilation in L/min?",
+      answer: 7.2,
+      tolerance: 0.05,
+      unit: "L/min",
+      hints: ["$\\dot V_E = V_T \\times RR$", "Divide mL/min by 1,000 for L/min."],
+      explanation: "$450 \\times 16 = 7{,}200$ mL/min $= 7.2$ L/min. Dead space is not subtracted for minute ventilation.",
+      concepts: ["alveolar-ventilation"],
+    },
+    {
+      id: "ap-q14",
+      type: "mcq",
+      topic: "Respiratory",
+      difficulty: 1,
+      prompt: "In a healthy person at rest, roughly what is the haemoglobin saturation of mixed venous blood (PO₂ about 40 mmHg)?",
+      options: ["About 25%", "About 50%", "About 75%", "About 98%"],
+      answer: 2,
+      hints: ["The P50 (50% saturation) is about 27 mmHg.", "At rest, tissues extract only about a quarter of the oxygen delivered."],
+      explanation:
+        "At a PO₂ of about 40 mmHg haemoglobin is still about 75% saturated, so resting tissues take up only about a quarter of the oxygen delivered. That reserve is what exercising muscle draws on. 50% is the P50 point (about 27 mmHg) and 98% is arterial blood.",
+      concepts: ["oxygen-dissociation"],
+    },
+    {
+      id: "ap-q15",
+      type: "numeric",
+      topic: "Respiratory",
+      difficulty: 3,
+      prompt:
+        "A patient has a PaCO₂ of 40 mmHg with an alveolar ventilation of 4.2 L/min. Sedation lowers alveolar ventilation to 2.8 L/min with unchanged CO₂ production. What is the new PaCO₂ (mmHg)?",
+      answer: 60,
+      tolerance: 0.5,
+      unit: "mmHg",
+      hints: ["PaCO₂ is inversely proportional to alveolar ventilation.", "New PaCO₂ = old PaCO₂ × (old ventilation / new ventilation)."],
+      explanation:
+        "$P_{aCO_2} = 40 \\times 4.2 / 2.8 = 40 \\times 1.5 = 60$ mmHg. A one-third fall in alveolar ventilation raises PaCO₂ by half, causing a respiratory acidosis.",
+      concepts: ["alveolar-ventilation"],
+    },
+    {
+      id: "ap-q16",
+      type: "mcq",
+      topic: "Respiratory",
+      difficulty: 2,
+      prompt:
+        "Patient A breathes 500 mL × 12/min; patient B breathes 250 mL × 24/min. Both have an anatomical dead space of 150 mL. Which statement is correct?",
+      options: [
+        "A and B have the same minute and alveolar ventilation",
+        "B has the same minute ventilation as A but much lower alveolar ventilation",
+        "B has higher alveolar ventilation because it breathes faster",
+        "A has the larger dead space because each breath is bigger",
+      ],
+      answer: 1,
+      hints: ["Work out $V_T \\times RR$ for each first.", "Then subtract 150 mL from each breath before multiplying."],
+      explanation:
+        "Both move 6,000 mL/min. Alveolar ventilation is $(500 - 150) \\times 12 = 4{,}200$ mL/min for A but $(250 - 150) \\times 24 = 2{,}400$ mL/min for B, because dead space takes 60% of each of B's breaths. Anatomical dead space is fixed by the airways, not the breath size.",
+      concepts: ["alveolar-ventilation"],
+    },
+    {
+      id: "ap-q17",
+      type: "numeric",
+      topic: "Renal & acid–base",
+      difficulty: 2,
+      prompt: "A patient with metabolic acidosis has Na⁺ 138, Cl⁻ 100 and HCO₃⁻ 12 mmol/L. What is the anion gap (mmol/L)?",
+      answer: 26,
+      tolerance: 0.5,
+      unit: "mmol/L",
+      hints: ["Anion gap = Na⁺ − (Cl⁻ + HCO₃⁻).", "Normal is about 8–12 mmol/L."],
+      explanation:
+        "$138 - (100 + 12) = 26$ mmol/L, a high anion gap. Unmeasured acid anions (for example ketones or lactate) have replaced bicarbonate.",
+      concepts: ["acid-base"],
+    },
+    {
+      id: "ap-q18",
+      type: "mcq",
+      topic: "Renal & acid–base",
+      difficulty: 2,
+      prompt: "GFR is 125 mL/min. A freely filtered substance has a renal clearance of 600 mL/min. What is the best conclusion?",
+      options: [
+        "It is net reabsorbed by the tubules",
+        "It is neither reabsorbed nor secreted",
+        "It is net secreted by the tubules",
+        "It is not filtered at the glomerulus",
+      ],
+      answer: 2,
+      hints: ["Compare the clearance with GFR.", "Filtration alone can only clear GFR's worth of plasma each minute."],
+      explanation:
+        "Filtration alone would clear 125 mL/min. Clearing 600 mL/min means the tubules must add more of it to the urine by secretion, as happens with para-aminohippurate (PAH). Clearance below GFR would mean net reabsorption; equal to GFR, as with inulin, would mean neither.",
+      concepts: ["renal-clearance"],
+    },
+    {
+      id: "ap-q19",
+      type: "numeric",
+      topic: "Renal & acid–base",
+      difficulty: 3,
+      prompt:
+        "A 24-hour urine collection is 1,440 mL with a creatinine of 100 mg/dL. Plasma creatinine is 1.0 mg/dL. What is the creatinine clearance (mL/min)?",
+      answer: 100,
+      tolerance: 0.5,
+      unit: "mL/min",
+      hints: ["Convert the urine volume to a flow rate: there are 1,440 minutes in 24 hours.", "$C = U \\times \\dot V / P$; the mg/dL units cancel."],
+      explanation:
+        "$\\dot V = 1{,}440 / 1{,}440 = 1.0$ mL/min, so $C = (100 \\times 1.0) / 1.0 = 100$ mL/min. Because creatinine is slightly secreted, this slightly overestimates the true GFR.",
+      concepts: ["renal-clearance"],
+    },
+    {
+      id: "ap-q20",
+      type: "mcq",
+      topic: "Renal & acid–base",
+      difficulty: 3,
+      prompt:
+        "A drowsy patient after an opioid overdose has pH 7.26, PaCO₂ 60 mmHg and HCO₃⁻ 26 mmol/L. What is the best interpretation?",
+      options: [
+        "Acute respiratory acidosis",
+        "Chronic respiratory acidosis with full renal compensation",
+        "Metabolic acidosis with respiratory compensation",
+        "Respiratory alkalosis",
+      ],
+      answer: 0,
+      hints: ["Which value explains the low pH?", "Kidneys take days to raise bicarbonate; how much has it changed here?"],
+      explanation:
+        "pH is low and PaCO₂ is high, so the primary disorder is respiratory acidosis from hypoventilation. Bicarbonate has barely risen (only buffering, no renal compensation yet), so it is acute. Check: $6.1 + \\log_{10}(26 / 1.8) \\approx 6.1 + 1.16 = 7.26$.",
+      concepts: ["acid-base", "alveolar-ventilation"],
+    },
   ],
 
   labs: [
@@ -350,6 +538,80 @@ Normal arterial values: pH 7.35–7.45, $P_{aCO_2}$ 35–45 mmHg, $HCO_3^-$ 22�
       ],
       resultsGuide:
         "Expect systolic pressure and heart rate to rise with exercise while diastolic pressure stays similar or falls slightly (muscle vasodilation lowers peripheral resistance). Pulse pressure therefore widens. Values should return towards baseline within a few minutes.",
+    },
+    {
+      id: "ap-lab-spirometry",
+      title: "Lung volumes, forced expiration and breathing pattern",
+      topic: "Respiratory",
+      objective:
+        "Use a spirometer to measure tidal volume, vital capacity, FEV₁ and FVC, then compare minute and alveolar ventilation during normal and rapid shallow breathing.",
+      safety: [
+        "Don't take part if you have had recent chest, abdominal or eye surgery, a recent pneumothorax, a current chest infection, or uncontrolled asthma. Anyone can stop at any time.",
+        "Use a new single-use mouthpiece with a bacterial–viral filter for every participant; never share mouthpieces.",
+        "Stay seated for forced manoeuvres and paced breathing. Stop and breathe normally if you feel light-headed, tingly or dizzy, and tell the instructor.",
+        "Clean the spirometer handset and nose clips with the approved disinfectant wipes between participants.",
+      ],
+      materials: [
+        "Spirometer (electronic or bell) with single-use filtered mouthpieces",
+        "Nose clip",
+        "Metronome",
+        "Timer",
+        "Height measure for predicted values",
+      ],
+      steps: [
+        { text: "Record the participant's age, sex and height, and enter them into the spirometer software or prediction table.", why: "Normal lung volumes depend on height, age and sex, so results are judged against predicted values." },
+        { text: "Seat the participant upright with feet flat, fit the nose clip and seal the lips firmly around the mouthpiece.", why: "A leak at the nose or lips makes every volume under-read." },
+        { text: "Breathe quietly for 1 minute. Record the average tidal volume and count the respiratory rate.", why: "Resting values are the baseline for the ventilation calculations, before any effortful breathing alters them." },
+        { text: "From quiet breathing, breathe in as fully as possible, then breathe out slowly and completely to record the slow vital capacity.", why: "A slow manoeuvre measures vital capacity without the airway narrowing a forced blow can cause." },
+        { text: "For the forced manoeuvre, breathe in fully, then blow out as hard and fast as possible and keep going for at least 6 seconds. Record FEV₁ and FVC.", why: "FEV₁ depends on a maximal start; continuing for 6 seconds lets the FVC reach its true end." },
+        { text: "Repeat the forced manoeuvre until there are three acceptable blows, resting between them. The two best FEV₁ and FVC values should be within 150 mL.", why: "Repeatability shows the result reflects the lungs, not variable effort." },
+        { text: "Breathe shallowly at 24 breaths/min with the metronome for 1 minute and record the average tidal volume, then return to normal breathing.", why: "Shows how dead space takes a bigger share of small breaths." },
+      ],
+      drills: [
+        { id: "d1", prompt: "FEV₁ is 3.6 L and FVC is 4.5 L. What is the FEV₁/FVC ratio as a percentage?", answer: 80, tolerance: 0.5, unit: "%", working: "3.6 / 4.5 × 100 = 80%." },
+        { id: "d2", prompt: "Inspiratory reserve volume is 3.0 L, tidal volume 0.5 L and expiratory reserve volume 1.2 L. What is the vital capacity?", answer: 4.7, tolerance: 0.05, unit: "L", working: "VC = IRV + VT + ERV = 3.0 + 0.5 + 1.2 = 4.7 L." },
+        { id: "d3", prompt: "At rest, tidal volume is 500 mL and respiratory rate is 14/min. What is the minute ventilation?", answer: 7, tolerance: 0.05, unit: "L/min", working: "500 × 14 = 7,000 mL/min = 7.0 L/min." },
+        { id: "d4", prompt: "During shallow breathing, tidal volume is 300 mL at 24/min with a dead space of 150 mL. What is the alveolar ventilation?", answer: 3600, tolerance: 1, unit: "mL/min", working: "(300 − 150) × 24 = 150 × 24 = 3,600 mL/min." },
+        { id: "d5", prompt: "In the same shallow breaths, what percentage of each breath is dead space?", answer: 50, tolerance: 0.5, unit: "%", working: "150 / 300 × 100 = 50%. At a 500 mL breath it would be 30%." },
+      ],
+      resultsGuide:
+        "In healthy adults FEV₁/FVC is usually above 70% (it falls slowly with age). A low ratio suggests airflow obstruction, as in asthma or COPD; a low FVC with a normal or high ratio suggests a restrictive pattern. During rapid shallow breathing, minute ventilation may stay similar or rise, but alveolar ventilation falls because a larger fraction of each breath stays in the dead space.",
+    },
+    {
+      id: "ap-lab-water-load",
+      title: "Urine flow and concentration after a water load",
+      topic: "Renal & acid–base",
+      objective:
+        "Measure urine flow rate and specific gravity before and after drinking a water load, and use the results to explore clearance and how the kidney excretes excess water.",
+      safety: [
+        "Don't take part if you have a kidney or heart condition, are pregnant, or have been told to restrict fluids. Drink only the volume set by the instructor (no more than 1 litre over 15 minutes).",
+        "Handle only your own urine sample. Wear gloves, keep containers capped, and dispose of urine in the designated toilet or sluice.",
+        "Clean spills immediately with the approved disinfectant and wash hands after every collection.",
+        "Stop and tell the instructor if you develop headache, nausea or confusion during the session.",
+      ],
+      materials: [
+        "Lidded urine collection containers and a measuring cylinder",
+        "Urinometer or refractometer for specific gravity",
+        "Reagent strips for urinalysis",
+        "Drinking water and a measuring jug",
+        "Timer and gloves",
+      ],
+      steps: [
+        { text: "Empty the bladder completely at time zero and discard this urine. Note the exact time.", why: "Each later sample then contains only urine made during a known interval." },
+        { text: "Drink the water load over 15 minutes, then stay seated and avoid other drinks or caffeine.", why: "Posture, caffeine and extra fluid all change urine output and would confound the result." },
+        { text: "Empty the bladder fully every 30 minutes for 2 hours. Measure each volume with the measuring cylinder.", why: "Volume divided by the collection time gives the urine flow rate." },
+        { text: "Measure the specific gravity of each sample.", why: "Specific gravity tracks urine concentration: it falls as the kidney excretes free water." },
+        { text: "Test each sample with a reagent strip and record any abnormal pads.", why: "Unexpected glucose, protein or blood is a finding to report, not part of the experiment." },
+        { text: "Plot urine flow rate and specific gravity against time.", why: "The plot shows the delay before diuresis and its peak as ADH secretion is suppressed." },
+      ],
+      drills: [
+        { id: "d1", prompt: "A participant passes 180 mL of urine in a 30-minute collection. What is the urine flow rate?", answer: 6, tolerance: 0.05, unit: "mL/min", working: "180 / 30 = 6.0 mL/min." },
+        { id: "d2", prompt: "The four 30-minute collections are 150, 240, 210 and 120 mL after a 1,000 mL water load. What percentage of the load was excreted in 2 hours?", answer: 72, tolerance: 0.5, unit: "%", working: "150 + 240 + 210 + 120 = 720 mL; 720 / 1,000 × 100 = 72%." },
+        { id: "d3", prompt: "During peak diuresis, urine creatinine is 0.2 mg/mL at a flow of 6 mL/min. Assume plasma creatinine is 0.01 mg/mL. What is the creatinine clearance?", answer: 120, tolerance: 0.5, unit: "mL/min", working: "C = (0.2 × 6) / 0.01 = 1.2 / 0.01 = 120 mL/min." },
+        { id: "d4", prompt: "If GFR is 120 mL/min and urine flow is 6 mL/min, what percentage of the filtered fluid is excreted?", answer: 5, tolerance: 0.1, unit: "%", working: "6 / 120 × 100 = 5%; the tubules still reabsorb 95% of the filtrate even in a water diuresis." },
+      ],
+      resultsGuide:
+        "Urine flow should start rising about 30 minutes after drinking, peak at around 60–90 minutes and then fall, while specific gravity falls from about 1.020 towards 1.005 or below. The water load dilutes plasma slightly, osmoreceptors cut ADH release, and the collecting ducts become less permeable to water. Creatinine clearance (an estimate of GFR) stays roughly constant: urine creatinine falls as flow rises, so U × V barely changes.",
     },
   ],
 
@@ -448,6 +710,205 @@ Normal arterial values: pH 7.35–7.45, $P_{aCO_2}$ 35–45 mmHg, $HCO_3^-$ 22�
         "Potassium can read normal or high in DKA even though total-body potassium is low.",
       ],
     },
+    {
+      id: "ap-case-opioid-hypoventilation",
+      title: "Too sleepy after a hip replacement",
+      topic: "Respiratory",
+      setting: "Orthopaedic ward, early morning. Educational simulation with a fictional patient.",
+      presentation:
+        "Robin, 71, is on day 1 after a hip replacement and has opioid pain relief through a patient-controlled analgesia (PCA) pump. On the 6 a.m. observations Robin is very hard to wake and breathing slowly.",
+      stages: [
+        {
+          title: "Initial assessment",
+          prompt: "What do you check first?",
+          mode: "multi",
+          options: [
+            { text: "Airway and breathing: respiratory rate, depth and pattern over a full minute", good: true, feedback: "Airway patent with soft snoring. Respiratory rate 7/min, shallow and regular." },
+            { text: "Oxygen saturation", good: true, feedback: "SpO₂ 89% on room air." },
+            { text: "Conscious level and pupils", good: true, feedback: "Opens eyes briefly to voice then drifts off. Pupils small (pinpoint) and equal." },
+            { text: "Heart rate, blood pressure and capillary refill", good: true, feedback: "HR 64, BP 118/70, capillary refill 2 seconds." },
+            { text: "Check the hip dressing for oozing before anything else", good: false, feedback: "Worth doing later, but airway and breathing come first; the dressing is dry." },
+            { text: "Ask what Robin would like for breakfast", good: false, feedback: "Robin can't stay awake to answer, and it doesn't help the assessment." },
+          ],
+          debrief:
+            "Slow, shallow breathing, low saturation, pinpoint pupils and reduced consciousness in a patient using opioids is the classic picture of opioid toxicity. An ABCDE approach keeps the priorities in order.",
+        },
+        {
+          title: "Immediate actions",
+          prompt: "Which actions do you take now?",
+          mode: "multi",
+          options: [
+            { text: "Call for urgent help and escalate according to the early warning score", good: true, feedback: "The score is high; the outreach team and doctor are on their way." },
+            { text: "Open the airway and give oxygen, with saturations monitored", good: true, feedback: "A head-tilt chin-lift stops the snoring and saturations rise slowly." },
+            { text: "Stop the PCA pump and keep the button out of reach, as the local protocol directs", good: true, feedback: "No further opioid is delivered while Robin is assessed." },
+            { text: "Prepare the opioid antagonist prescribed for this situation, following the local protocol", good: true, feedback: "The team gives it in small titrated amounts; Robin becomes rousable and breathing improves." },
+            { text: "Let Robin sleep; the surgery was tiring", good: false, feedback: "A respiratory rate of 7 with low saturations is a medical emergency, not normal sleep." },
+            { text: "Give a sedative so Robin rests comfortably", good: false, feedback: "Another sedative would deepen the respiratory depression further." },
+          ],
+          debrief:
+            "Treat the airway and breathing, stop the cause and get help early. Reversal agents are titrated so that breathing recovers without abruptly removing all pain relief.",
+        },
+        {
+          title: "Investigations",
+          prompt: "Which tests are most useful now?",
+          mode: "multi",
+          options: [
+            { text: "Arterial blood gas", good: true, feedback: "On room air before oxygen: pH 7.25, PaCO₂ 62 mmHg, HCO₃⁻ 26 mmol/L, PaO₂ 58 mmHg." },
+            { text: "Capillary blood glucose", good: true, feedback: "6.1 mmol/L: normal, so hypoglycaemia isn't causing the drowsiness." },
+            { text: "Review the PCA history and the drug chart", good: true, feedback: "Many more PCA doses were delivered overnight than on the previous evening, and a sedating antihistamine was also given." },
+            { text: "Lipid profile", good: false, feedback: "Doesn't explain acute drowsiness or change management." },
+            { text: "Bone density scan", good: false, feedback: "Irrelevant to the emergency." },
+          ],
+          debrief:
+            "The blood gas confirms what the bedside suggests. A glucose check is quick and rules out a treatable mimic, and the drug chart shows why toxicity has developed.",
+        },
+        {
+          title: "Interpret the blood gas",
+          prompt: "pH 7.25, PaCO₂ 62 mmHg, HCO₃⁻ 26 mmol/L. What is it?",
+          mode: "single",
+          options: [
+            { text: "Acute respiratory acidosis", good: true, feedback: "Correct: low pH from a high PaCO₂, with bicarbonate barely raised because the kidneys haven't had time to compensate." },
+            { text: "Metabolic acidosis with respiratory compensation", good: false, feedback: "Bicarbonate is normal and PaCO₂ is high, so the problem is respiratory." },
+            { text: "Chronic respiratory acidosis with full compensation", good: false, feedback: "Full renal compensation would take days and would bring bicarbonate well above 30 mmol/L." },
+            { text: "Respiratory alkalosis", good: false, feedback: "pH is below 7.35, so this is an acidaemia." },
+          ],
+          debrief:
+            "Check with Henderson–Hasselbalch: 6.1 + log₁₀(26 / 1.86) ≈ 7.25. Hypoventilation causes both the raised PaCO₂ and the hypoxaemia.",
+        },
+        {
+          title: "Mechanism",
+          prompt: "Robin's tidal volume is about 250 mL at 7 breaths/min. Why has PaCO₂ risen so much?",
+          mode: "single",
+          options: [
+            { text: "Opioids depress the brainstem respiratory centre, and alveolar ventilation falls to about 700 mL/min", good: true, feedback: "(250 − 150) × 7 = 700 mL/min, about a sixth of normal, so CO₂ accumulates." },
+            { text: "Pneumonia has created a shunt in the lungs", good: false, feedback: "A shunt mainly lowers PaO₂; PaCO₂ is usually normal or low because breathing increases." },
+            { text: "The kidneys are retaining acid", good: false, feedback: "Bicarbonate is normal; the kidneys aren't the cause." },
+            { text: "Haemoglobin is binding too much CO₂", good: false, feedback: "Haemoglobin carriage doesn't raise PaCO₂; reduced alveolar ventilation does." },
+          ],
+          debrief:
+            "PaCO₂ is inversely proportional to alveolar ventilation. Small breaths at a slow rate ventilate the alveoli very poorly, because dead space takes most of each breath.",
+        },
+        {
+          title: "Ongoing care",
+          prompt: "Robin is now awake with a respiratory rate of 14. What is the most important next step?",
+          mode: "single",
+          options: [
+            { text: "Keep monitoring closely, because the antagonist may wear off before the opioid and sedation can return", good: true, feedback: "Correct: the reversal agent's effect is often shorter than the opioid's, so frequent observations continue." },
+            { text: "Restart the PCA at the previous settings straight away", good: false, feedback: "The prescription needs a medical review first; restarting unchanged risks a repeat." },
+            { text: "Return to four-hourly observations now Robin is awake", good: false, feedback: "Too soon: re-sedation can happen within the hour." },
+          ],
+          debrief:
+            "Re-sedation is a known risk. The team reviews analgesia (including non-opioid options), stops other sedating drugs and documents the event.",
+        },
+      ],
+      teachingPoints: [
+        "Count respiratory rate over a full minute; a falling rate is an early warning of opioid toxicity.",
+        "Opioid toxicity: reduced consciousness, slow shallow breathing, pinpoint pupils.",
+        "Hypoventilation raises PaCO₂ and causes an acute respiratory acidosis with a near-normal bicarbonate.",
+        "After reversal, keep watching: the antagonist can wear off before the opioid.",
+      ],
+    },
+    {
+      id: "ap-case-gi-bleed",
+      title: "Black stools and a racing pulse",
+      topic: "Cardiovascular",
+      setting: "Emergency department. Educational simulation with a fictional patient.",
+      presentation:
+        "Sam, 58, arrives after fainting at home. They have passed black, tarry stools since yesterday and vomited once with dark material like coffee grounds. They look pale and sweaty.",
+      stages: [
+        {
+          title: "Primary assessment",
+          prompt: "What do you assess or ask first?",
+          mode: "multi",
+          options: [
+            { text: "Heart rate, blood pressure and capillary refill", good: true, feedback: "HR 124, BP 92/60 mmHg, capillary refill 4 seconds, cool hands." },
+            { text: "Respiratory rate, SpO₂ and conscious level", good: true, feedback: "RR 24/min, SpO₂ 97% on air, alert but anxious." },
+            { text: "Medicines, especially anti-inflammatory painkillers and anticoagulants", good: true, feedback: "\"I've been taking ibuprofen most days for my back for a month.\"" },
+            { text: "Alcohol intake and any known liver disease", good: true, feedback: "\"A couple of pints at the weekend. No liver problems that I know of.\"" },
+            { text: "Ask about holiday plans", good: false, feedback: "Not relevant to a patient who may be bleeding." },
+            { text: "Test visual acuity", good: false, feedback: "Doesn't help with the immediate problem." },
+          ],
+          debrief:
+            "Melaena (black, tarry stool) and coffee-ground vomiting point to upper gastrointestinal bleeding. Regular NSAID use is a common cause of peptic ulcer bleeding.",
+        },
+        {
+          title: "Interpret the vital signs",
+          prompt: "BP 92/60 gives a MAP of about 71 mmHg. Which mechanism best explains the heart rate of 124 and the cool peripheries?",
+          mode: "single",
+          options: [
+            { text: "Reduced baroreceptor firing increases sympathetic drive, raising heart rate and constricting skin vessels", good: true, feedback: "Correct: the reflex defends MAP by raising cardiac output and peripheral resistance." },
+            { text: "Increased vagal tone from the vomiting", good: false, feedback: "Vagal activation slows the heart; it wouldn't cause a tachycardia." },
+            { text: "Fever from infection", good: false, feedback: "There is no fever, and cool peripheries argue against early sepsis." },
+            { text: "Anxiety alone", good: false, feedback: "Anxiety can raise heart rate but doesn't explain low blood pressure, a slow capillary refill and fainting." },
+          ],
+          debrief:
+            "Blood loss lowers venous return, preload and stroke volume. The baroreflex keeps MAP near a perfusing level by raising heart rate and TPR. A shock index (HR / SBP) of 124 / 92 ≈ 1.3 is well above the normal value of under about 0.7, suggesting substantial loss.",
+        },
+        {
+          title: "Immediate management",
+          prompt: "Which actions do you take now (in a supervised clinical setting)?",
+          mode: "multi",
+          options: [
+            { text: "Call senior help and follow the local major haemorrhage or GI bleed pathway", good: true, feedback: "The team is alerted and the endoscopy service is contacted." },
+            { text: "Insert two wide-bore cannulae and send bloods, including group and crossmatch", good: true, feedback: "Access secured; samples sent." },
+            { text: "Start fluid and blood product resuscitation as the team directs", good: true, feedback: "Resuscitation starts with close monitoring of the response." },
+            { text: "Keep the patient nil by mouth and monitor urine output", good: true, feedback: "Ready for endoscopy; a fall in urine output is an early sign of poor renal perfusion." },
+            { text: "Walk the patient to the toilet to collect a stool sample", good: false, feedback: "Sam has already fainted; standing could cause another collapse." },
+            { text: "Give medicine to lower the blood pressure", good: false, feedback: "Blood pressure is already low; lowering it further would worsen perfusion." },
+          ],
+          debrief:
+            "Restore circulating volume while arranging the definitive treatment, usually endoscopy to find and stop the bleeding. Specific products and volumes follow local protocols and senior decisions.",
+        },
+        {
+          title: "Investigations",
+          prompt: "Which results matter most at this stage?",
+          mode: "multi",
+          options: [
+            { text: "Full blood count", good: true, feedback: "Haemoglobin 118 g/L: only slightly low." },
+            { text: "Urea and electrolytes", good: true, feedback: "Urea raised out of proportion to creatinine." },
+            { text: "Venous lactate", good: true, feedback: "4.1 mmol/L: raised, showing tissues are underperfused." },
+            { text: "Clotting screen", good: true, feedback: "Normal; Sam isn't on an anticoagulant." },
+            { text: "Thyroid function tests", good: false, feedback: "Won't change emergency management." },
+          ],
+          debrief:
+            "Haemoglobin can look near normal early in an acute bleed because red cells and plasma are lost together; it falls as fluid moves into the circulation. Digested blood is absorbed as protein, which raises urea. A raised lactate reflects anaerobic metabolism in poorly perfused tissue.",
+        },
+        {
+          title: "Diagnosis",
+          prompt: "What is the most likely diagnosis?",
+          mode: "single",
+          options: [
+            { text: "Hypovolaemic shock from an upper GI bleed, probably a peptic ulcer", good: true, feedback: "Melaena, coffee-ground vomit, NSAID use, tachycardia, hypotension and a raised lactate fit together." },
+            { text: "Cardiogenic shock", good: false, feedback: "There are no cardiac symptoms and the history points to blood loss; cardiogenic shock would usually show signs of fluid overload." },
+            { text: "Septic shock", good: false, feedback: "There is no fever or infective source, and the peripheries are cool rather than warm." },
+            { text: "Simple vasovagal faint", good: false, feedback: "A faint is followed by a slow pulse and quick recovery, not persistent tachycardia and hypotension." },
+          ],
+          debrief:
+            "Shock means inadequate tissue perfusion. Here the cause is reduced circulating volume, so preload, stroke volume and cardiac output all fall.",
+        },
+        {
+          title: "Is resuscitation working?",
+          prompt: "Which findings would show Sam is responding?",
+          mode: "multi",
+          options: [
+            { text: "Heart rate falling towards normal", good: true, feedback: "As preload returns, the baroreflex no longer needs to drive the heart so hard." },
+            { text: "MAP staying above about 65 mmHg", good: true, feedback: "Organ perfusion pressure is being maintained." },
+            { text: "Urine output recovering", good: true, feedback: "The kidneys are being perfused again." },
+            { text: "Lactate falling on repeat testing", good: true, feedback: "Tissue perfusion is improving." },
+            { text: "Haemoglobin rising straight after salt-water fluids", good: false, feedback: "Crystalloid dilutes the blood, so haemoglobin usually falls, not rises." },
+            { text: "Pulse pressure narrowing further", good: false, feedback: "A narrowing pulse pressure suggests falling stroke volume, a sign of worsening shock." },
+          ],
+          debrief:
+            "Judge the response by the trend in heart rate, MAP, capillary refill, urine output, lactate and conscious level, not by one value.",
+        },
+      ],
+      teachingPoints: [
+        "Melaena and coffee-ground vomiting suggest upper GI bleeding; ask about NSAIDs and anticoagulants.",
+        "Tachycardia and cool peripheries are the baroreflex defending MAP; hypotension is a late sign.",
+        "Early haemoglobin can be falsely reassuring in acute haemorrhage.",
+        "Track the response to resuscitation with heart rate, MAP, urine output and lactate.",
+      ],
+    },
   ],
 
   skills: [
@@ -466,6 +927,40 @@ Normal arterial values: pH 7.35–7.45, $P_{aCO_2}$ 35–45 mmHg, $HCO_3^-$ 22�
         { text: "Records systolic (Korotkoff I) and diastolic (Korotkoff V) to the nearest 2 mmHg" },
         { text: "Explains the result to the patient in plain language" },
         { text: "Cleans equipment and performs hand hygiene" },
+      ],
+    },
+    {
+      id: "ap-skill-resp-obs",
+      title: "Respiratory rate and pulse oximetry",
+      purpose: "A rising or falling respiratory rate is often the earliest sign of deterioration, and SpO₂ needs reading in context.",
+      items: [
+        { text: "Performs hand hygiene and introduces self; confirms the patient's identity", critical: true },
+        { text: "Explains that you'll check oxygen levels and gains consent" },
+        { text: "Counts the respiratory rate for a full 60 seconds without telling the patient they're being watched", critical: true },
+        { text: "Notes depth, pattern and regularity of breathing, and any use of accessory muscles" },
+        { text: "Chooses a warm, well-perfused finger, removing nail varnish or false nails if needed" },
+        { text: "Waits for a steady reading and a good waveform before recording SpO₂", critical: true },
+        { text: "Records SpO₂ together with the inspired oxygen (room air or the device and flow rate)", critical: true },
+        { text: "Recognises limits: poor perfusion, movement, and carbon monoxide poisoning can give misleading readings" },
+        { text: "Calculates the early warning score and escalates abnormal values according to local policy", critical: true },
+        { text: "Cleans the probe and performs hand hygiene" },
+      ],
+    },
+    {
+      id: "ap-skill-urinalysis",
+      title: "Urinalysis with a reagent strip",
+      purpose: "A dipstick is a quick bedside screen for glucose, ketones, blood, protein and signs of infection.",
+      items: [
+        { text: "Performs hand hygiene and puts on gloves; confirms the patient's identity", critical: true },
+        { text: "Explains the test and how to collect a midstream sample in a clean container" },
+        { text: "Checks the strips are in date and the container has been kept closed", critical: true },
+        { text: "Notes the urine's colour, clarity and odour" },
+        { text: "Dips the strip briefly so all pads are wet, then removes excess along the container edge" },
+        { text: "Holds the strip horizontal so reagents don't run between pads" },
+        { text: "Reads each pad against the colour chart at the time stated by the manufacturer", critical: true },
+        { text: "Records results accurately with date and time, and labels any sample sent to the laboratory" },
+        { text: "Reports abnormal results (for example glucose with ketones, blood or protein) to the responsible clinician", critical: true },
+        { text: "Disposes of urine, strip and gloves safely, and performs hand hygiene" },
       ],
     },
   ],

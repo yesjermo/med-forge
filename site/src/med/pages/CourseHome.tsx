@@ -1,5 +1,6 @@
 import { Icon } from "@/components/Icon";
 import type { ProgressStore } from "../progress";
+import { lectureId, noteId } from "./DailyReview";
 import type { Course } from "../types";
 import { Crumbs, ProgressBar, courseHref } from "../ui";
 
@@ -7,7 +8,8 @@ import { Crumbs, ProgressBar, courseHref } from "../ui";
 export function CourseHome({ course, progress }: { course: Course; progress: ProgressStore }) {
   const ids = course.questions.map((q) => q.id);
   const counts = progress.counts(ids);
-  const due = progress.due(ids).length;
+  // The daily review also schedules this course's notes and lectures.
+  const due = progress.due([...ids, ...course.concepts.map((c) => noteId(course, c)), ...course.lectures.map((l) => lectureId(course, l))]).length;
   const next = course.questions.find((q) => !progress.question(q.id)) ?? course.questions[0];
 
   return (
@@ -24,7 +26,8 @@ export function CourseHome({ course, progress }: { course: Course; progress: Pro
       <div className="actions quick-actions">
         {next && (
           <a className="button" href={courseHref(course, "questions", next.id)}>
-            <Icon name="spark" /> {progress.question(next.id) ? "Practise" : "Start question 1"}
+            <Icon name="spark" />{" "}
+            {progress.question(next.id) ? "Practise" : next === course.questions[0] ? "Start question 1" : `Continue: question ${course.questions.indexOf(next) + 1}`}
           </a>
         )}
         <a className="button secondary-link" href="#/daily-review">

@@ -44,10 +44,26 @@ export function hendersonHasselbalch(pKa: number, base: number, acid: number): n
   return pKa + Math.log10(base / acid);
 }
 
-/** Check a typed numeric answer within a tolerance. Accepts commas and scientific notation. */
+/**
+ * Read a typed number: accepts thousands separators (1,500,000), a decimal comma (4,9), scientific
+ * notation (1.5e9, 1.5 × 10^9, 1.5x10^-3), a typographic minus (−3) and a trailing unit or % sign
+ * ("4.9 L/min"), which is ignored. Returns NaN when there's no number at the start.
+ */
+export function parseAnswer(input: string): number {
+  let t = input.trim().replace(/[\u2212\u2013]/g, "-").replace(/\s*[x×]\s*10\s*\^?\s*/i, "e");
+  const m = /^[-+]?(?:\d[\d,]*(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?/i.exec(t);
+  if (!m) return NaN;
+  // Whatever follows the number must look like a unit ("L/min", "%", "mmHg"), not more maths ("3/4").
+  if (!/^(\s+\S.*|%.*|[a-zµμ°].*)?$/i.test(t.slice(m[0].length))) return NaN;
+  t = m[0];
+  // One comma not followed by exactly three digits is a decimal comma (4,9); otherwise commas group thousands.
+  if (/^[-+]?\d+,\d+$/.test(t.replace(/e.*$/i, "")) && !/^[-+]?\d{1,3}(,\d{3})+$/.test(t.replace(/e.*$/i, ""))) t = t.replace(",", ".");
+  return Number(t.replace(/,/g, ""));
+}
+
+/** Check a typed numeric answer within a tolerance (see parseAnswer for what's accepted). */
 export function checkNumber(input: string, answer: number, tolerance: number): { ok: boolean; value: number | null } {
-  const cleaned = input.trim().replace(/,/g, "").replace(/\s*[x×]\s*10\^?/i, "e");
-  const value = cleaned === "" ? NaN : Number(cleaned);
+  const value = parseAnswer(input);
   if (!Number.isFinite(value)) return { ok: false, value: null };
   return { ok: Math.abs(value - answer) <= tolerance, value };
 }

@@ -180,3 +180,10 @@ a.button.secondary-link:hover { background: var(--primary-soft); border-color: v
 .review-plan { display: grid; gap: 8px; margin-bottom: 16px; }
 .review-plan .field { max-width: 220px; margin: 0; }
 .question-tabs { margin: 12px 0; }
+.recall-card h2 { margin: 6px 0 10px; }
+.recall-answer { border-left: 3px solid var(--secondary); padding: 4px 0 4px 14px; margin: 8px 0 14px; }
+.recall-list { margin: 8px 0; padding-left: 20px; }
+.review-plan .row { display: flex; flex-wrap: wrap; gap: 12px; }
+.review-plan .row .field { flex: 1 1 200px; max-width: none; }
+.numeric-row { display: flex; gap: 8px; align-items: stretch; }
+.numeric-row input { flex: 1; min-width: 0; }
