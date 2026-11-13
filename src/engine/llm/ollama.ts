@@ -117,3 +117,32 @@ export class OllamaWriter implements Writer {
     return { text: stripThinking(text), model: this.model, truncated };
   }
 }
+
+export interface InstalledModel {
+  /** Exact name Ollama uses, e.g. "qwen2.5:latest" or "kimi-k2:1t-cloud". */
+  name: string;
+  /** Download size in bytes (0 for cloud models). */
+  size: number;
+}
+
+/** "qwen2.5:latest" and "qwen2.5" are the same model. */
+export const sameModel = (a: string, b: string) => a.replace(/:latest$/, "") === b.replace(/:latest$/, "");
+
+/**
+ * Models installed in Ollama (GET /api/tags). Throws WriterUnavailableError when Ollama can't be
+ * reached, so the caller can say "start Ollama" instead of listing nothing.
+ */
+export async function listOllamaModels(host = DEFAULT_OLLAMA_HOST, fetchImpl: typeof fetch = (...a) => fetch(...a)): Promise<InstalledModel[]> {
+  let res: Response;
+  try {
+    res = await fetchImpl(`${host.replace(/\/+$/, "")}/api/tags`);
+  } catch {
+    throw new WriterUnavailableError(`Can't reach Ollama at ${host}.`);
+  }
+  if (!res.ok) throw new WriterUnavailableError(`Ollama at ${host} returned ${res.status}.`);
+  const body = (await res.json()) as { models?: { name?: unknown; model?: unknown; size?: unknown }[] };
+  return (body.models ?? [])
+    .map((m) => ({ name: String(m.name ?? m.model ?? ""), size: typeof m.size === "number" ? m.size : 0 }))
+    .filter((m) => m.name)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}

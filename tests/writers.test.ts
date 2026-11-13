@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ApiWriter } from "../src/engine/llm/api";
 import { stripThinking } from "../src/engine/llm/models";
-import { OllamaWriter } from "../src/engine/llm/ollama";
+import { OllamaWriter, listOllamaModels, sameModel } from "../src/engine/llm/ollama";
 import { availableWriters, createWriter } from "../src/engine/llm/select";
 import { WriterUnavailableError } from "../src/engine/llm/types";
 import { InputError, MAX_INPUT_CHARS, checkInput } from "../src/engine/run";
@@ -147,5 +147,27 @@ describe("checkInput", () => {
     expect(() => checkInput("  ")).toThrow(InputError);
     expect(() => checkInput("a".repeat(MAX_INPUT_CHARS + 1))).toThrow(InputError);
     expect(checkInput("  one two three four five ")).toBe("one two three four five");
+  });
+});
+
+describe("installed Ollama models", () => {
+  it("lists models from /api/tags, sorted, and treats :latest as the same model", async () => {
+    let url = "";
+    const fake = (async (u: string) => {
+      url = u;
+      return new Response(JSON.stringify({ models: [{ name: "qwen3:latest", size: 5_000_000_000 }, { name: "kimi-k2:1t-cloud", size: 0 }, { model: "gemma3:4b" }] }));
+    }) as unknown as typeof fetch;
+    const models = await listOllamaModels("http://127.0.0.1:11434/", fake);
+    expect(url).toBe("http://127.0.0.1:11434/api/tags");
+    expect(models.map((m) => m.name)).toEqual(["gemma3:4b", "kimi-k2:1t-cloud", "qwen3:latest"]);
+    expect(sameModel("qwen3", "qwen3:latest")).toBe(true);
+    expect(sameModel("qwen3", "qwen3:8b")).toBe(false);
+  });
+
+  it("reports an unreachable Ollama clearly", async () => {
+    const offline = (async () => {
+      throw new TypeError("fetch failed");
+    }) as unknown as typeof fetch;
+    await expect(listOllamaModels("http://127.0.0.1:11434", offline)).rejects.toThrow(/Can't reach Ollama/);
   });
 });

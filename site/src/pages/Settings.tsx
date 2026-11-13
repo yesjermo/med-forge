@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { API_PROVIDERS, API_PROVIDER_NAMES, OLLAMA_MODELS, type ModelChoice } from "@/engine/llm/models";
+import { API_PROVIDERS, API_PROVIDER_NAMES } from "@/engine/llm/models";
+import { ModelPicker } from "./ModelPicker";
 import { DEFAULT_SETTINGS, siteOrigin, type Settings, type WriterChoice } from "../settings";
 
 const WRITERS: [WriterChoice, string][] = [
@@ -8,22 +9,6 @@ const WRITERS: [WriterChoice, string][] = [
   ["custom", "Another OpenAI-compatible API (Kimi, Qwen, Groq…)"],
 ];
 
-function ModelField({ value, onChange, choices, placeholder }: { value: string; onChange: (v: string) => void; choices: readonly ModelChoice[]; placeholder?: string }) {
-  return (
-    <label className="field">
-      <span>Model</span>
-      <input list="model-choices" value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} spellCheck={false} />
-      <datalist id="model-choices">
-        {choices.map((m) => (
-          <option key={m.id} value={m.id}>
-            {m.note}
-          </option>
-        ))}
-      </datalist>
-      {choices.length > 0 && <small className="hint">Suggestions: {choices.map((m) => `${m.id} (${m.note})`).join(" · ")}. Any model id works.</small>}
-    </label>
-  );
-}
 
 export function SettingsPage({ settings, onSave }: { settings: Settings; onSave: (s: Settings) => boolean }) {
   const [draft, setDraft] = useState(settings);
@@ -69,7 +54,7 @@ export function SettingsPage({ settings, onSave }: { settings: Settings; onSave:
                 <input value={draft.ollamaHost} onChange={(e) => set("ollamaHost", e.target.value)} />
               </label>
             </div>
-            <ModelField value={draft.ollamaModel} onChange={(v) => set("ollamaModel", v)} choices={OLLAMA_MODELS} />
+            <ModelPicker writer="ollama" ollamaHost={draft.ollamaHost} value={draft.ollamaModel} onChange={(v) => set("ollamaModel", v)} />
             {origin === "null" ? (
               <div className="callout">
                 <p>
@@ -137,7 +122,7 @@ export function SettingsPage({ settings, onSave }: { settings: Settings; onSave:
                     don't save it on a shared computer.
                   </small>
                 </label>
-                <ModelField value={draft.apiModels[w] ?? ""} onChange={(v) => setIn("apiModels", v)} choices={p?.models ?? []} placeholder={p?.defaultModel ?? "model id"} />
+                <ModelPicker writer={w} ollamaHost={draft.ollamaHost} value={draft.apiModels[w] || p?.defaultModel || ""} onChange={(v) => setIn("apiModels", v)} />
               </>
             );
           })()

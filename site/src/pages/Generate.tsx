@@ -3,10 +3,12 @@ import { GeneratorView, type GenerateRunner } from "@/components/GeneratorView";
 import { runPack } from "@/engine/run";
 import { useAdvisor } from "@/components/useAdvisor";
 import { browserAdvisor } from "../advise";
-import { makeProviders, makeWriter, writerLabel, type Settings } from "../settings";
+import { makeProviders, makeWriter, type Settings } from "../settings";
+import { ModelPicker } from "./ModelPicker";
+import { API_PROVIDERS } from "@/engine/llm/models";
 
 /** Web edition generator: runs entirely in the browser with the visitor's own writer and keys. */
-export function Generate({ mode, settings }: { mode: "generate" | "check"; settings: Settings }) {
+export function Generate({ mode, settings, onSettings }: { mode: "generate" | "check"; settings: Settings; onSettings: (s: Settings) => boolean }) {
   const advisor = useAdvisor(browserAdvisor(settings));
   const [use, setUse] = useState({ crossref: true, perplexity: true, openalex: true });
   const has = { crossref: true, perplexity: Boolean(settings.perplexityKey.trim()), openalex: Boolean(settings.openalexKey.trim()) };
@@ -52,13 +54,31 @@ export function Generate({ mode, settings }: { mode: "generate" | "check"; setti
         },
       }}
       writerControl={
-        <div className="field">
-          <span>Writer</span>
-          <a className="writer-link" href="#/settings">
-            {writerLabel(settings)}{" "}
-            <span className="hint">change</span>
-          </a>
-        </div>
+        <>
+          <div className="field">
+            <span>Writer</span>
+            <a className="writer-link" href="#/settings">
+              {settings.writer === "ollama" ? "Ollama (free)" : settings.writer === "custom" ? "Custom API" : settings.writer}{" "}
+              <span className="hint">change</span>
+            </a>
+          </div>
+          <ModelPicker
+            writer={settings.writer}
+            ollamaHost={settings.ollamaHost}
+            value={
+              settings.writer === "ollama"
+                ? settings.ollamaModel
+                : settings.apiModels[settings.writer] || (settings.writer === "custom" ? "" : API_PROVIDERS[settings.writer].defaultModel)
+            }
+            onChange={(m) =>
+              onSettings(
+                settings.writer === "ollama"
+                  ? { ...settings, ollamaModel: m }
+                  : { ...settings, apiModels: { ...settings.apiModels, [settings.writer]: m } },
+              )
+            }
+          />
+        </>
       }
       providerControls={
         <>
